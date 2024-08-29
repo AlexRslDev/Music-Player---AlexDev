@@ -67,16 +67,21 @@
 }
 
 
+
 /* Reused code */
-.player-items-container, .song-playing, .control-player-btns, .player-btns, .logo, .item-sidebar, .playlist-options, .item-playlist, .place-app, .right-main, .top-main, .favorite-btn, .ordered-as-home, .sogs-control-home, .left-song-item, .home-song-item, .right-song-item, .home-duration, .tp-art-itm, .tp-art-txt, .stats-itm {
+#player-items-container, #song-playing {
   display: flex;
   align-items: center;
 }
-.control-btn, .player-btn, .volume-regulator, .volume-line, .song-playing, .time-lapse-bar, .song-playing, .options img, .item-playlist, .item-sidebar, .favorite-btn {
+.control-player-btns, .player-btns, .logo, .item-sidebar, .playlist-options, .item-playlist, .place-app, .right-main, .top-main, .favorite-btn, .ordered-as-home, .sogs-control-home, .left-song-item, .home-song-item, .right-song-item, .home-duration, .tp-art-itm, .tp-art-txt, .stats-itm {
+  display: flex;
+  align-items: center;
+}
+.control-btn, .player-btn, .volume-regulator, .volume-line, .time-lapse-bar, #song-playing, .options img, .item-playlist, .item-sidebar, .favorite-btn {
   cursor: pointer;
   transition: all .2s ease;
 }
-.control-btn:active , .player-btn:active, .song-playing:active, .options img:active, .favorite-btn:active {
+.control-btn:active , .player-btn:active, .options img:active, .favorite-btn:active {
   transform: scale(1.1);
 }
 .volume-line:active, .time-lapse-bar:active {transform: scaleY(.85);}
@@ -88,7 +93,7 @@
 .home-duration {gap: 12px;}
 
 /* Player items container */
-.player-items-container {
+#player-items-container {
   width: 100%;
   height: calc(100% - 1rem);
   justify-content: space-between;
@@ -96,27 +101,32 @@
 }
 
 /* Playing song component */
-.song-playing {
+#song-playing {
   width: 14rem;
   gap: .6rem;
   border-radius: 8px;
+
+  picture {
+    width: 3.6rem;
+    height: 3.6rem;
+    background-image: url(../../assets/images/Arctic_Monkeys_album.jpg);
+    background-position: center;
+    background-size: cover;
+    border-radius: 1.25rem;
+  }
+  p {
+    font-weight: 600;
+  }
+  span {
+    font-family: var(--poppins);
+    font-weight: 400;
+    font-size: 14px;
+  }
+  &:active {
+    transform: scale(1.1);
+  }
 }
-.song-image {
-  width: 3.6rem;
-  height: 3.6rem;
-  background-image: url(../../assets/images/Arctic_Monkeys_album.jpg);
-  background-position: center;
-  background-size: cover;
-  border-radius: 1.25rem;
-}
-.song-text p {
-  font-weight: 600;
-}
-.song-text span {
-  font-family: var(--poppins);
-  font-weight: 400;
-  font-size: 14px;
-}
+
 
 /* Player control btns */
 .control-player-btns {
@@ -291,21 +301,36 @@
 /* Favorite song componet */
 .favorite-song-component {
   width: 100%;
-  height: 200px;
-  padding: 30px 50px;
+  height: 250px;
+  /*padding: 30px 50px;*/
   position: relative;
-  background: linear-gradient(180deg, #FAFBFB 0%, #F2F3F7 38%);
+  /*background: linear-gradient(180deg, #FAFBFB 0%, #F2F3F7 38%);*/
   border-radius: 20px;
   overflow: hidden;
 }
-.image-component img {
-  width: 446px;
+.image-fv-content {
+  width: 100%;
+  height: 100%;
+  background-image: url(../../assets/images/2012ArcticMonkeys02DC011211.jpg);
+  background-position: center 20%;
+  background-repeat: no-repeat;
+  background-size: auto;
+  filter: blur(.5px);
+  filter: brightness(75%);
   position: absolute;
-  right: 0;
   top: 0;
 }
-
+.favorite-name h2, .artist-name span, .artist-name p, .favorite-text {text-shadow: 0px 0px 18px rgba(46, 37, 39, 1);} 
+.favorite-name h2 {
+  color: #fff;
+  font-size: 40px;
+}
+.artist-name span, .artist-name p, .favorite-text {color: var(--main-color);}
 .favorite-text {
+  position: absolute;
+  z-index: 2;
+  top: 15%;
+  left: 8%;
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -319,21 +344,20 @@
 }
 .artist-name span {
   font-family: var(--poppins);
-  font-size: 14px;
 }
-.artist-name p {font-size: 12px;}
 
 /* Play now btn */
 .favorite-btn {
-  width: 113px;
+  width: 150px;
   color: #fff;
-  padding: 8px 13px;
+  padding: 12px 16px;
   background: linear-gradient(-90deg, #2B8BE1 0%, #A6C1D1 90%);
   gap: 9px;
   border: none;
   border-radius: 8px;
+  font-size: 16px;
 }
-.favorite-btn img {width: 14px;}
+.favorite-btn img {width: 16px;}
 
 /* Songs home */
 .sogs-control-home {
@@ -448,6 +472,9 @@
 }
 @media screen and (max-width: 1320px) {
   .right-home {display: none;}
+  .left-home {
+    width: 100%;
+  }
 }
 @media screen and (max-width: 974px) {
   .favorite-song-component {width: 100%;}
@@ -459,7 +486,7 @@
   }
 }
 @media screen and (max-width: 744px) {
-  .song-playing, .player-btns {display: none;}
+  #song-playing, .player-btns {display: none;}
 }
 @media screen and (max-width: 718px) {
   .image-component img {
@@ -478,7 +505,10 @@
 
 
 /* Phone responsive */
-@media screen and (max-width: 468px) {
+@media (max-width: 491px) {
+  .favorite-song-component {
+    display: none;
+  }
   .side-bar {display: none;}
   .app-container {
     grid-template-columns: 1fr;
@@ -487,17 +517,15 @@
     "main"
     "player";
   }
-  .favorite-song-component {
-    width: 100%;
-    justify-content: start;
-  }
+  .windows-container {margin-top: 0;}
   .right-song-item img {display: none;}
+}
+@media screen and (max-width: 468px) {
   .main-container {padding: 0 12px;}
 }
 @media screen and (max-width: 352px) {
   .favorite-song-component {display: none;}
   .home-duration {font-size: 14px;}
-  .windows-container {margin-top: 0;}
 }
 
 /* missing categories icon */
