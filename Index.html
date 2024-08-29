@@ -9,34 +9,35 @@
 </head>
 <body>
   
-  <div class="app-container">
+  <div id="app-container">
 
-    <div class="side-bar">
+    <div id="side-bar">
 
       <div>
 
-        <div class="logo non-view">
-          <img src="assets/images/image-removebg-preview.png" alt="" width="42px">
+        <div id="logo" class="non-view">
+          <img src="assets/images/image-removebg-preview.png" alt="">
           <span>Music Player</span>
         </div>
 
-        <div class="menu-contain">
+        <div id="menu-contain">
   
-          <div style="margin-bottom: 12px;" class="gray non-view">Menu</div>
-          <ul class="menu">
-            <li class="item-sidebar active">
+          <div class="gray non-view">Menu</div>
+
+          <ul>
+            <li class="active">
               <img src="assets/images/house-solid.svg" alt="">
               <p>Home</p>
             </li>
-            <li class="item-sidebar">
+            <li>
               <img src="assets/images/chart.svg" alt="">
               <p>Statistics</p>
             </li>
-            <li class="item-sidebar">
+            <li>
               <img src="assets/images/mic.svg" alt="">
               <p>Artists</p>
             </li>
-            <li class="item-sidebar">
+            <li>
               <img src="assets/images/heart-regular-blue.svg" alt="">
               <p>Favorites</p>
             </li>
@@ -47,132 +48,235 @@
       </div>
 
 
-      <div class="playlist-container">
+      <div id="playlist-container">
 
-        <div class="gray playlist-options">
+        <div id="playlist-options" class="gray">
           <span class="non-view">Playlists</span>
-          <div class="options">
+          <div>
             <img src="assets/images/plus-solid.svg" alt="">
             <img src="assets/images/bars-solid.svg" alt="">
           </div>
         </div>
 
         <!-- playlist songs container -->
-        <div>
-  
-          <div class="playlist-songs">
+        <div id="playlist-songs">
 
-            <ul>
-              
-              <li class="item-playlist active">
-                <img src="assets/images/Arctic_Monkeys_album.jpg" alt="">
-                <div class="playlist-text">
-                  <p>Mardy Bum</p>
-                </div>
-              </li>
+          <ul>
+            
+            <li class="active">
+              <img src="assets/images/Arctic_Monkeys_album.jpg" alt="">
+              <div>
+                <p>Mardy Bum</p>
+              </div>
+            </li>
 
-              <li class="item-playlist">
-                <img src="assets/images/Arctic_Monkeys_album.jpg" alt="">
-                <div class="playlist-text">
-                  <p>Mardy Bum</p>
-                </div>
-              </li>
+            <li>
+              <img src="assets/images/Arctic_Monkeys_album.jpg" alt="">
+              <div>
+                <p>Mardy Bum collisionnnnnnnnnn</p>
+              </div>
+            </li>
 
-              <li class="item-playlist">
-                <img src="assets/images/Arctic_Monkeys_album.jpg" alt="">
-                <div class="playlist-text">
-                  <p>Mardy Bum</p>
-                </div>
-              </li>
+            <li>
+              <img src="assets/images/Arctic_Monkeys_album.jpg" alt="">
+              <div>
+                <p>Mardy Bum</p>
+              </div>
+            </li>
 
-            </ul>
-    
-          </div>
+          </ul>
   
         </div>
-
+  
       </div>
 
     </div>
 
-    <main class="main-container">
+    <main id="main-container">
 
-      <header class="top-main">
+      <header id="top-main">
 
-        <div class="left-main">
-          <div class="place-app">
+        
+        <div id="place-app">
 
-            <span class="place-text">Your Library</span>
+          <span>Your Library</span>
 
-            <div class="search-bar">
-              <div class="content-search-bar">
-                <img src="assets/images/magnifying-glass-solid.svg" width="22px" alt="">
-                <input type="text" placeholder="Search Music">
-              </div>
-            </div>
-
+          <div>
+            <img src="assets/images/magnifying-glass-solid.svg" alt="">
+            <input type="text" placeholder="Search Music">
           </div>
+          
         </div>
+        
 
-        <div class="right-main">
+        <div id="right-main">
           <img src="assets/images/user-icon.jpg" width="50px" alt="">
-          <div class="bell">
+          <div>
             <img src="assets/images/bell-regular.svg" width="15x" alt="">
           </div>
         </div>
 
       </header>
 
-      <div class="windows-container">
+      <div id="windows-container">
         
-        <div class="home-window">
+        <div id="home-window">
 
-          <div class="left-home">
+          <div id="left-home">
             
-            <div class="favorite-song-component">
+            <div id="favorite-song-component">
+              
+              <picture></picture>
   
-              <div class="favorite-text">
+              <div id="favorite-text">
                 <p>Your favorite song</p>
   
-                <div class="favorite-name">
+                <div>
                   <h2>Mardy Bum</h2>
-                  <div class="artist-name">
+                  <div>
                     <span>Arctic Monkeys</span>
                     <p>17 Plays</p>
                   </div>
                 </div>
   
-                <button class="favorite-btn">
+                <button>
                   <img src="assets/images/play-solid.svg" alt="">
                   <span>Play Now</span>
                 </button>
   
               </div>
               
-              <div class="image-fv-content"></div>
             </div>
 
-            <div class="sogs-control-home">
+            <div id="songs-control-home">
               <span>Your songs</span>
-              <div class="ordered-as-home">
+              <div>
                 <p class="gray">Recents</p>
                 <img src="assets/images/bars-solid.svg" alt="">
               </div>
             </div>
 
-            <div class="songs-content">
+            <div id="songs-content">
               <ul>
 
-                <li class="home-song-item active">
-                  <div class="left-song-item">
+                <li class="active">
+                  <div id="left-song-item">
                     <img src="assets/images/Arctic_Monkeys_album.jpg" alt="">
-                    <div class="text-song-home">
+                    <div>
                       <span>Mardy Bum</span>
                       <p class="gray">Arctic Monkeys</p>
                     </div>
                   </div>
 
-                  <div class="right-song-item">
+                  <div id="right-song-item">
+                    <img src="assets/images/heart-regular.svg" alt="">
+                    <div class="home-duration ">
+                      <p class="gray">3:07</p>
+                      <img src="assets/images/ellipsis-solid.svg" alt="">
+                    </div>
+                  </div>
+                </li>
+
+                <li>
+                  <div id="left-song-item">
+                    <img src="assets/images/Arctic_Monkeys_album.jpg" alt="">
+                    <div>
+                      <span>Mardy Bum</span>
+                      <p class="gray">Arctic Monkeys</p>
+                    </div>
+                  </div>
+
+                  <div id="right-song-item">
+                    <img src="assets/images/heart-regular.svg" alt="">
+                    <div class="home-duration ">
+                      <p class="gray">3:07</p>
+                      <img src="assets/images/ellipsis-solid.svg" alt="">
+                    </div>
+                  </div>
+                </li>
+
+                <li>
+                  <div id="left-song-item">
+                    <img src="assets/images/Arctic_Monkeys_album.jpg" alt="">
+                    <div>
+                      <span>Mardy Bum</span>
+                      <p class="gray">Arctic Monkeys</p>
+                    </div>
+                  </div>
+
+                  <div id="right-song-item">
+                    <img src="assets/images/heart-regular.svg" alt="">
+                    <div class="home-duration ">
+                      <p class="gray">3:07</p>
+                      <img src="assets/images/ellipsis-solid.svg" alt="">
+                    </div>
+                  </div>
+                </li>
+
+                <li>
+                  <div id="left-song-item">
+                    <img src="assets/images/Arctic_Monkeys_album.jpg" alt="">
+                    <div>
+                      <span>Mardy Bum</span>
+                      <p class="gray">Arctic Monkeys</p>
+                    </div>
+                  </div>
+
+                  <div id="right-song-item">
+                    <img src="assets/images/heart-regular.svg" alt="">
+                    <div class="home-duration ">
+                      <p class="gray">3:07</p>
+                      <img src="assets/images/ellipsis-solid.svg" alt="">
+                    </div>
+                  </div>
+                </li>
+
+                <li>
+                  <div id="left-song-item">
+                    <img src="assets/images/Arctic_Monkeys_album.jpg" alt="">
+                    <div>
+                      <span>Mardy Bum</span>
+                      <p class="gray">Arctic Monkeys</p>
+                    </div>
+                  </div>
+
+                  <div id="right-song-item">
+                    <img src="assets/images/heart-regular.svg" alt="">
+                    <div class="home-duration ">
+                      <p class="gray">3:07</p>
+                      <img src="assets/images/ellipsis-solid.svg" alt="">
+                    </div>
+                  </div>
+                </li>
+
+                <li>
+                  <div id="left-song-item">
+                    <img src="assets/images/Arctic_Monkeys_album.jpg" alt="">
+                    <div>
+                      <span>Mardy Bum</span>
+                      <p class="gray">Arctic Monkeys</p>
+                    </div>
+                  </div>
+
+                  <div id="right-song-item">
+                    <img src="assets/images/heart-regular.svg" alt="">
+                    <div class="home-duration ">
+                      <p class="gray">3:07</p>
+                      <img src="assets/images/ellipsis-solid.svg" alt="">
+                    </div>
+                  </div>
+                </li>
+
+                <li>
+                  <div id="left-song-item">
+                    <img src="assets/images/Arctic_Monkeys_album.jpg" alt="">
+                    <div>
+                      <span>Mardy Bum</span>
+                      <p class="gray">Arctic Monkeys</p>
+                    </div>
+                  </div>
+
+                  <div id="right-song-item">
                     <img src="assets/images/heart-regular.svg" alt="">
                     <div class="home-duration ">
                       <p class="gray">3:07</p>
@@ -181,131 +285,6 @@
                   </div>
                 </li>
                 
-                <li class="home-song-item">
-                  <div class="left-song-item">
-                    <img src="assets/images/Arctic_Monkeys_album.jpg" alt="">
-                    <div class="text-song-home">
-                      <span>Mardy Bum</span>
-                      <p class="gray">Arctic Monkeys</p>
-                    </div>
-                  </div>
-
-                  <div class="right-song-item">
-                    <img src="assets/images/heart-regular.svg" alt="" class="dp-n">
-                    <div class="home-duration ">
-                      <p class="home-duration gray">3:07</p>
-                      <img class="dp-n" src="assets/images/ellipsis-solid.svg" alt="">
-                    </div>
-                  </div>
-                </li>
-
-                <li class="home-song-item">
-                  <div class="left-song-item">
-                    <img src="assets/images/Arctic_Monkeys_album.jpg" alt="">
-                    <div class="text-song-home">
-                      <span>Mardy Bum</span>
-                      <p class="gray">Arctic Monkeys</p>
-                    </div>
-                  </div>
-
-                  <div class="right-song-item">
-                    <img src="assets/images/heart-regular.svg" alt="" class="dp-n">
-                    <div class="home-duration ">
-                      <p class="home-duration gray">3:07</p>
-                      <img class="dp-n" src="assets/images/ellipsis-solid.svg" alt="">
-                    </div>
-                  </div>
-                </li>
-                
-                <li class="home-song-item">
-                  <div class="left-song-item">
-                    <img src="assets/images/Arctic_Monkeys_album.jpg" alt="">
-                    <div class="text-song-home">
-                      <span>Mardy Bum</span>
-                      <p class="gray">Arctic Monkeys</p>
-                    </div>
-                  </div>
-
-                  <div class="right-song-item">
-                    <img src="assets/images/heart-regular.svg" alt="" class="dp-n">
-                    <div class="home-duration ">
-                      <p class="home-duration gray">3:07</p>
-                      <img class="dp-n" src="assets/images/ellipsis-solid.svg" alt="">
-                    </div>
-                  </div>
-                </li>
-
-                <li class="home-song-item">
-                  <div class="left-song-item">
-                    <img src="assets/images/Arctic_Monkeys_album.jpg" alt="">
-                    <div class="text-song-home">
-                      <span>Mardy Bum</span>
-                      <p class="gray">Arctic Monkeys</p>
-                    </div>
-                  </div>
-
-                  <div class="right-song-item">
-                    <img src="assets/images/heart-regular.svg" alt="" class="dp-n">
-                    <div class="home-duration ">
-                      <p class="home-duration gray">3:07</p>
-                      <img class="dp-n" src="assets/images/ellipsis-solid.svg" alt="">
-                    </div>
-                  </div>
-                </li>
-
-                <li class="home-song-item">
-                  <div class="left-song-item">
-                    <img src="assets/images/Arctic_Monkeys_album.jpg" alt="">
-                    <div class="text-song-home">
-                      <span>Mardy Bum</span>
-                      <p class="gray">Arctic Monkeys</p>
-                    </div>
-                  </div>
-
-                  <div class="right-song-item">
-                    <img src="assets/images/heart-regular.svg" alt="" class="dp-n">
-                    <div class="home-duration ">
-                      <p class="home-duration gray">3:07</p>
-                      <img class="dp-n" src="assets/images/ellipsis-solid.svg" alt="">
-                    </div>
-                  </div>
-                </li>
-
-                <li class="home-song-item">
-                  <div class="left-song-item">
-                    <img src="assets/images/Arctic_Monkeys_album.jpg" alt="">
-                    <div class="text-song-home">
-                      <span>Mardy Bum</span>
-                      <p class="gray">Arctic Monkeys</p>
-                    </div>
-                  </div>
-
-                  <div class="right-song-item">
-                    <img src="assets/images/heart-regular.svg" alt="" class="dp-n">
-                    <div class="home-duration ">
-                      <p class="home-duration gray">3:07</p>
-                      <img class="dp-n" src="assets/images/ellipsis-solid.svg" alt="">
-                    </div>
-                  </div>
-                </li>
-
-                <li class="home-song-item">
-                  <div class="left-song-item">
-                    <img src="assets/images/Arctic_Monkeys_album.jpg" alt="">
-                    <div class="text-song-home">
-                      <span>Mardy Bum</span>
-                      <p class="gray">Arctic Monkeys</p>
-                    </div>
-                  </div>
-
-                  <div class="right-song-item">
-                    <img src="assets/images/heart-regular.svg" alt="" class="dp-n">
-                    <div class="home-duration ">
-                      <p class="home-duration gray">3:07</p>
-                      <img class="dp-n" src="assets/images/ellipsis-solid.svg" alt="">
-                    </div>
-                  </div>
-                </li>
 
               </ul>
             </div>
@@ -313,16 +292,15 @@
 
           </div>
 
+          <div id="right-home">
 
-          <div class="right-home">
-
-            <div class="tp-art-home">
-              <div class="tp-art-txt">
+            <div id="tp-art-home">
+              <div>
                 <span>Top Artist</span>
                 <p>See all</p>
               </div>
               <ul>
-                <li class="tp-art-itm active">
+                <li class="active">
                   <img src="assets/images/billie-eilish-cover.jpeg" alt="">
                   <div>
                     <span>Billie Eilish</span>
@@ -330,7 +308,7 @@
                   </div>
                 </li>
                 
-                <li class="tp-art-itm">
+                <li>
                   <img src="assets/images/billie-eilish-cover.jpeg" alt="">
                   <div>
                     <span>Billie Eilish</span>
@@ -338,7 +316,7 @@
                   </div>
                 </li>
                 
-                <li class="tp-art-itm">
+                <li>
                   <img src="assets/images/billie-eilish-cover.jpeg" alt="">
                   <div>
                     <span>Billie Eilish</span>
@@ -348,41 +326,40 @@
               </ul>
             </div>
 
-            <div class="stats-home">
-              <div class="tp-art-txt">
+            <div>
+              <div id="up-stats-home">
                 <span>Statistics</span>
                 <p>Explore</p>
               </div>
-              <ul>
+              <ul id="stats-itms">
 
-                <li class="stats-itm">
-                  <div class="stats-itm-txt">
+                <li>
+                  <div>
                     <p class="gray">Tracks</p>
                     <span>548</span>
                   </div>
 
-                  <div class="stats-music-circle-out">
-                    <div class="stats-music-circle-into">
+                  <div id="stats-music-circle-out">
+                    <div>
                       <img src="assets/images/music-solid-main.svg" alt="">
                     </div>
                   </div>
 
                 </li>
 
-                <li class="stats-itm">
-                  <div class="stats-itm-txt">
+                <li>
+                  <div>
                     <p class="gray">Likes</p>
                     <span>109</span>
                   </div>
 
-                  <div class="stats-music-circle-out">
-                    <div class="stats-music-circle-into">
+                  <div id="stats-music-circle-out">
+                    <div>
                       <img src="assets/images/heart-solid.svg" alt="">
                     </div>
                   </div>
 
                 </li>
-                
                 
               </ul>
             </div>
@@ -395,10 +372,10 @@
 
     </main>
     
-    <div class="player-container">
+    <div id="player-container">
       
-      <div class="time-lapse-container">
-        <div class="time-lapse-bar"></div>
+      <div id="time-lapse-container">
+        <div></div>
       </div>
 
       <div id="player-items-container">
@@ -411,20 +388,20 @@
           </div>
         </div>
 
-        <div class="control-player-btns">
-          <img src="assets/images/shuffle-solid.svg" height="22px" alt="" class="control-btn">
-          <img src="assets/images/backward-solid.svg" height="22px" alt="" class="control-btn">
-          <img src="assets/images/pause-solid.svg" height="32px" alt="" class="control-btn">
-          <img src="assets/images/forward-solid.svg" height="22px" alt="" class="control-btn">
-          <img src="assets/images/repeat-solid.svg" height="22px" alt="" class="control-btn">
+        <div id="control-player-btns">
+          <img src="assets/images/shuffle-solid.svg" height="22px" alt="">
+          <img src="assets/images/backward-solid.svg" height="22px" alt="">
+          <img src="assets/images/pause-solid.svg" height="32px" alt="">
+          <img src="assets/images/forward-solid.svg" height="22px" alt="">
+          <img src="assets/images/repeat-solid.svg" height="22px" alt="">
         </div>
  
-        <div class="player-btns">
-          <img src="assets/images/heart-regular.svg" height="22px" alt="" class="player-btn spanish-gray">
-          <img src="assets/images/plus-regular.svg" height="22px" alt="" class="player-btn spanish-gray">
-          <img src="assets/images/volume-up-line.svg" height="22px" alt="" class="player-btn spanish-gray">
-          <div class="volume-regulator">
-            <div class="volume-line"></div>
+        <div id="player-btns">
+          <img src="assets/images/heart-regular.svg" alt="" class="spanish-gray">
+          <img src="assets/images/plus-regular.svg"alt="" class="spanish-gray">
+          <img src="assets/images/volume-up-line.svg"alt="" class="spanish-gray">
+          <div>
+            <div></div>
           </div>
         </div>
 
