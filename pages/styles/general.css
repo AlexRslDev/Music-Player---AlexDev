@@ -18,6 +18,7 @@
   margin: 0;
   box-sizing: border-box;
   font-family: var(--inter);
+  img, p, span, h2, ::placeholder {user-select: none;}
 }
 
 html {
