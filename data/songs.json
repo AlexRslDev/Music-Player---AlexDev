@@ -5,7 +5,7 @@
         "artist": "Arctic Monkeys",
         "path": "../assets/songs/Mardy Bum.mp3",
         "duration": "2:55",
-        "cover": "arctic monkeys.jpg"
+        "cover": "arctic monkeys.webp"
     },
     {
         "id": "2",
@@ -18,10 +18,10 @@
     {
         "id": "3",
         "name": "[FREE] Horror Type Beat -_'_'Pentacle_'_' _ Dark Horror Trap Beat Instrumental",
-        "artist": "prod. Frankie Vibes",
+        "artist": "Frankie Vibes",
         "path": "../assets/songs/[FREE] Horror Type Beat -_'_'Pentacle_'_' _ Dark Horror Trap Beat Instrumental (prod. Frankie Vibes).mp3",
         "duration": "2:47",
-        "cover": "pentacle.webp"
+        "cover": "Frankie Vibes.webp"
     },
     {
         "id": "4",
@@ -29,7 +29,7 @@
         "artist": "Aaron Smith (KRONO Remix)",
         "path": "../assets/songs/Aaron Smith - Dancin (KRONO Remix).mp3",
         "duration": "3:14",
-        "cover": "aron-smith.jpg"
+        "cover": "Aaron Smith (KRONO Remix).webp"
     },
     {
         "id": "5",
@@ -37,7 +37,7 @@
         "artist": "O.D.D",
         "path": "../assets/songs/After the Tone - O.D.D.mp3",
         "duration": "3:01",
-        "cover": "adter the tone.jpg"
+        "cover": "O.D.D.webp"
     },
     {
         "id": "6",
@@ -45,7 +45,7 @@
         "artist": "Blackbear",
         "path": "../assets/songs/Blackbear - Idfc.mp3",
         "duration": "4:06",
-        "cover": "idfc.webp"
+        "cover": "Blackbear.webp"
     },
     {
         "id": "7",
@@ -53,7 +53,7 @@
         "artist": "INABAKUMORI",
         "path": "../assets/songs/CUTE DEPRESSED - INABAKUMORI.mp3",
         "duration": "1:36",
-        "cover": "CUTE DEPRESSED.jpg"
+        "cover": "INABAKUMORI.webp"
     },
     {
         "id": "8",
@@ -61,7 +61,7 @@
         "artist": "d4vd",
         "path": "../assets/songs/d4vd - Poetic Vulgarity.mp3",
         "duration": "3:56",
-        "cover": "Poetic Vulgarity.webp"
+        "cover": "d4vd.webp"
     },
     {
         "id": "9",
@@ -69,7 +69,7 @@
         "artist": "YuEun Kim",
         "path": "../assets/songs/F. Chopin _ Nocturne in c sharp minor for violin and piano_ YuEun Kim.mp3",
         "duration": "4:36",
-        "cover": "chopin nocturne.jpg"
+        "cover": "YuEun Kim.webp"
     },
     {
         "id": "10",
@@ -77,7 +77,7 @@
         "artist": "Flo Rida",
         "path": "../assets/songs/Flo Rida - Low (feat. T-Pain).mp3",
         "duration": "3:50",
-        "cover": "Low flo rida.webp"
+        "cover": "Flo Rida.webp"
     },
     {
         "id": "11",
@@ -85,7 +85,7 @@
         "artist": "Frank Sinatra",
         "path": "../assets/songs/Frank Sinatra  - Five Minutes More.mp3",
         "duration": "2:36",
-        "cover": "frank sinatra.jpg"
+        "cover": "frank sinatra.webp"
     },
     {
         "id": "12",
@@ -141,7 +141,7 @@
         "artist": "feat.GHO6TBXSTA",
         "path": "../assets/songs/PARADIGMA (feat.GHO6TBXSTA).mp3",
         "duration": "2:18",
-        "cover": "paradigma.webp"
+        "cover": "feat.GHO6TBXSTA.webp"
     },
     {
         "id": "19",
@@ -149,7 +149,7 @@
         "artist": "Bluebonnets",
         "path": "../assets/songs/Pretty Girls (Bluebonnets).mp3",
         "duration": "3:15",
-        "cover": "pretty girls.webp"
+        "cover": "Bluebonnets.webp"
     },
     {
         "id": "20",
