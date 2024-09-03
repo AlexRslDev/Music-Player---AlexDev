@@ -18,19 +18,21 @@ const playerImg = document.getElementById('p-img'),
 const playIcon = 'assets/images/play-solid.svg';
 const pauseIcon = 'assets/images/pause-solid.svg';
 
-// Audio actual
-let currentAudio;
 
-let currentImg;
-let currentName;
-let currentArtist;
-let currentDuration;
 
-let musicIndex = 0;
+// Currents variables
+let currentAudio,
+  currentPosition,
+  currentImg,
+  currentName,
+  currentArtist,
+  currentTimeSong,
+  currentDurationSong,
+  musicIndex = 0;
 
+// Load Favorite Component
 getFavoriteSong();
-getCurrentSong();
-
+getCurrentSong()
 
 // Include HTML on the container
 fetchSongs().then(songs => {
@@ -63,7 +65,6 @@ fetchSongs().then(songs => {
   };
 });
 
-
 // Play music by ID
 function playSongById(id) {
   fetchSongs()
@@ -79,6 +80,7 @@ function playSongById(id) {
 
       // Buscar la posicion de la cancion dentro del array
       const indexPositon = songs.findIndex(element => element.id === song.id);
+      currentPosition = indexPositon;
       // actualizar la posicion
       musicIndex = indexPositon;
 
@@ -129,14 +131,16 @@ function playSongById(id) {
       }
 
     });
-};
+}
 
 function updateProgressBar() {
-  const { duration, currentTime } = currentAudio;
-  //console.log(currentAudio.currentTime, currentAudio.duration)
-  updateCurrentSong(currentAudio.currentTime);
-  const progressPercent = (currentTime / duration) * 100;
+  const duration = currentAudio.duration,
+    currentTime = currentAudio.currentTime,
+    progressPercent = (currentTime / duration) * 100;
   progress.style.width = `${progressPercent}%`;
+  currentTimeSong = currentTime;
+  currentDurationSong = duration;
+  updateCurrentSong();
 }
 
 function setProgressBar(e) {
@@ -146,17 +150,6 @@ function setProgressBar(e) {
   currentAudio.currentTime = (clickX / width) * currentAudio.duration;
 }
 
-function changePlayerBtn() {
-  if (this.src.includes('play-solid.svg')) {
-    this.src = pauseIcon; // Cambia a la imagen de pausa
-    currentAudio.play();
-    console.log(currentAudio)
-  } else {
-    this.src = playIcon; // Cambia a la imagen de play
-    currentAudio.pause();
-    console.log(currentAudio)
-  }
-};
 
 function changeMusic(direction) {
   fetchSongs()
@@ -167,58 +160,78 @@ function changeMusic(direction) {
     });
 }
 
-
 function getCurrentSong() {
-  try {
-    const currentOBJ = JSON.parse(localStorage.getItem('currentSong')) || undefined;
-    console.log(currentOBJ);
+  const savedSong = JSON.parse(localStorage.getItem('currentSong')) || {};
 
-    // Update the current song
-    playerImg.src = currentOBJ.currentImg;
-    playerTitle.innerHTML = currentOBJ.currentName;
-    playerArtist.innerHTML = currentOBJ.currentArtist;
-    progress.style.width = `${currentOBJ.currentDuration}%`;
+  if (savedSong.savedName) {
+    // Set variables
+    currentPosition = Number(savedSong.position);
+    currentTimeSong = Number(savedSong.currentTimeSong);
+    currentDurationSong = Number(savedSong.currentDurationSong);
+    currentImg = savedSong.savedImg;
+    currentName = savedSong.savedName;
+    currentArtist = savedSong.savedArtist;
+    musicIndex = Number(savedSong.position);
 
-    return currentOBJ;
-  } catch (error) {
-    console.error('Error parsing currentSong from localStorage:', error);
-    return undefined;
+    // Update UI // i can reuse with playSongById
+    playerImg.src = currentImg;
+    playerTitle.innerHTML = currentName;
+    playerArtist.innerHTML = currentArtist;
+    progress.style.width = `${(currentTimeSong / currentDurationSong) * 100}%`;
   }
 }
 
-function updateCurrentSong(currentDuration) {
-  let currentOBJ = JSON.parse(localStorage.getItem('currentSong')) || {};
+function updateCurrentSong() {
+  let savedSong = JSON.parse(localStorage.getItem('currentSong')) || {};
 
-  currentOBJ.currentImg = currentImg;
-  currentOBJ.currentName = currentName;
-  currentOBJ.currentArtist = currentArtist;
-  currentOBJ.currentDuration = currentDuration;
-
-  try {
-    localStorage.setItem('currentSong', JSON.stringify(currentOBJ));
-  } catch (error) {
-    console.error('Error saving currentSong to localStorage:', error);
-  }
+  savedSong.position = String(currentPosition);
+  savedSong.savedImg = currentImg;
+  savedSong.savedName = currentName;
+  savedSong.savedArtist = currentArtist;
+  savedSong.currentTimeSong = String(currentTimeSong);
+  savedSong.currentDurationSong = String(currentDurationSong);
+  // Save
+  localStorage.setItem('currentSong', JSON.stringify(savedSong));
 }
+
 
 
 // ----- Event Listeners ------
+playBtn.addEventListener('click', () => {
+  if (playBtn.src.includes('play-solid.svg')) {
+    playBtn.src = pauseIcon; // Cambia a la imagen de pausa
+    
+    if (!currentAudio) {
+      fetchSongs().then(songs => {
+        let obj = songs[currentPosition];
+        currentAudio = new Audio(obj.path);
+        currentAudio.currentTime = currentTimeSong;
+        currentAudio.play();
+        // Inicia la actualización del progreso
+        setInterval(() => {
+          updateProgressBar();
+        }, 100); // Actualiza el progreso cada segundo
+      });
+    } else {
+      currentAudio.play();
+      // Inicia la actualización del progreso
+      setInterval(() => {
+        updateProgressBar();
+      }, 100); // Actualiza el progreso cada segundo
+    }
+    
+  } else {
+    playBtn.src = playIcon; // Cambia a la imagen de play
+    currentAudio.pause();
+    console.log(currentAudio)
+  }
 
-playBtn.addEventListener('click', changePlayerBtn);
+});
+
 prevBtn.addEventListener('click', () => changeMusic(-1));
 nextBtn.addEventListener('click', () => changeMusic(1));
 
-// escuchar cuando el usuario le de click a la barra del player
-playerProgress.addEventListener('click', setProgressBar);
-
-// Play user's favorite song
-favoriteSongBtn.addEventListener('click', (event) => {
-  const btn = event.target.closest('button');
-  const id = btn.getAttribute('data-id'); // Obtener el ID desde el data-attribute
-  playSongById(id);
-});
-
-// User songs
+// When the User click a song from songs container
 userSongs.addEventListener('dblclick', (event) => {
   // Busca el <li> más cercano al elemento clicado
   const liElement = event.target.closest('li');
@@ -228,4 +241,14 @@ userSongs.addEventListener('dblclick', (event) => {
     const id = liElement.getAttribute('data-id'); // Obtener el ID desde el data-attribute
     playSongById(id);
   }
+});
+
+// escuchar cuando el usuario le de click a la barra del player
+playerProgress.addEventListener('click', setProgressBar);
+
+// Play user's favorite song
+favoriteSongBtn.addEventListener('click', (event) => {
+  const btn = event.target.closest('button');
+  const id = btn.getAttribute('data-id'); // Obtener el ID desde el data-attribute
+  playSongById(id);
 });
