@@ -54,38 +54,51 @@
         <div id="playlist-options" class="gray">
           <span class="non-view">Playlists</span>
           <div>
-            <img src="assets/images/plus-solid.svg" alt="">
+            <img src="assets/images/plus-solid.svg" id="c-playlist" alt="">
             <img src="assets/images/bars-solid.svg" alt="">
           </div>
         </div>
+        
+        <dialog id="playlist-dialog">
+          
+          <header>
+            <p>Create Playlist</p>
+          </header>
+      
+          <main>
+      
+            <div id="pst-img">
+              <img src="" id="user-img-pst" alt="">
+              <div id="default-pst-img"><img src="assets/images/music-solid-white.svg" id="msc-icon" alt=""></div>
+            </div>
+      
+            <form id="form-pst">
+      
+              <div class="inputs-pst">
+                <label>Playlist Name</label>
+                <input type="text" id="input-txt-pst" required>
+              </div>
+      
+              <div class="inputs-pst">
+                <label>Upload Image</label>
+                <div id="pst-upload">
+                  <label for="pst-file" id="custom-pst-file">Browse..</label>
+                  <p id="pst-no-file">No file selected.</p>
+                  <input type="file" id="pst-file" accept="image/*">
+                </div>
+              </div>
+              
+              <button type="submit" id="save-pst">Save</button>
+            </form>
+      
+          </main>
+
+        </dialog>
 
         <!-- playlist songs container -->
         <div id="playlist-songs">
 
-          <ul>
-            
-            <li class="active">
-              <img src="assets/images/Arctic_Monkeys_album.jpg" alt="">
-              <div>
-                <p>Mardy Bum</p>
-              </div>
-            </li>
-
-            <li>
-              <img src="assets/images/Arctic_Monkeys_album.jpg" alt="">
-              <div>
-                <p>Mardy Bum collisionnnnnnnnnn</p>
-              </div>
-            </li>
-
-            <li>
-              <img src="assets/images/Arctic_Monkeys_album.jpg" alt="">
-              <div>
-                <p>Mardy Bum</p>
-              </div>
-            </li>
-
-          </ul>
+          <ul id="user-playlists"></ul>
   
         </div>
   
@@ -175,7 +188,7 @@
               </div>
               <ul>
                 <li class="active">
-                  <img src="assets/images/billie-eilish-cover.jpeg" alt="">
+                  <img src="assets/images/covers/billie eilish.webp" alt="">
                   <div>
                     <span>Billie Eilish</span>
                     <p class="plays-art gray">24 Plays</p>
@@ -183,7 +196,7 @@
                 </li>
                 
                 <li>
-                  <img src="assets/images/billie-eilish-cover.jpeg" alt="">
+                  <img src="assets/images/covers/billie eilish.webp" alt="">
                   <div>
                     <span>Billie Eilish</span>
                     <p class="plays-art gray">24 Plays</p>
@@ -191,7 +204,7 @@
                 </li>
                 
                 <li>
-                  <img src="assets/images/billie-eilish-cover.jpeg" alt="">
+                  <img src="assets/images/covers/billie eilish.webp" alt="">
                   <div>
                     <span>Billie Eilish</span>
                     <p class="plays-art gray">24 Plays</p>

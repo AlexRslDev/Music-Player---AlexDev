@@ -12,7 +12,11 @@ const playerImg = document.getElementById('p-img'),
   prevBtn = document.getElementById('prev'),
   nextBtn = document.getElementById('next'),
   playBtn = document.getElementById('play'),
-  favoriteSongBtn = document.getElementById('fv-song-btn');
+  favoriteSongBtn = document.getElementById('fv-song-btn'),
+  createPlaylistBtn = document.getElementById('c-playlist'),
+  playlistDialog = document.getElementById('playlist-dialog'),
+  formCreatePlaylist = document.getElementById('form-pst'),
+  coverPlaylist = document.getElementById('pst-file');
 
 // Ruta de los iconos del player
 const playIcon = 'assets/images/play-solid.svg';
@@ -32,9 +36,12 @@ let currentAudio,
 
 // Load Favorite Component
 getFavoriteSong();
-getCurrentSong()
+// Load Current user's song
+getCurrentSong();
+// load playlist
+loadPlaylists();
 
-// Include HTML on the container
+// Include HTML user's songs on the container
 fetchSongs().then(songs => {
   songs.forEach(song => returnSong(song));
 
@@ -150,7 +157,6 @@ function setProgressBar(e) {
   currentAudio.currentTime = (clickX / width) * currentAudio.duration;
 }
 
-
 function changeMusic(direction) {
   fetchSongs()
     .then(songs => {
@@ -193,7 +199,6 @@ function updateCurrentSong() {
   // Save
   localStorage.setItem('currentSong', JSON.stringify(savedSong));
 }
-
 
 
 // ----- Event Listeners ------
@@ -246,9 +251,168 @@ userSongs.addEventListener('dblclick', (event) => {
 // escuchar cuando el usuario le de click a la barra del player
 playerProgress.addEventListener('click', setProgressBar);
 
+
 // Play user's favorite song
 favoriteSongBtn.addEventListener('click', (event) => {
   const btn = event.target.closest('button');
   const id = btn.getAttribute('data-id'); // Obtener el ID desde el data-attribute
   playSongById(id);
+});
+
+createPlaylistBtn.addEventListener('click', () => {
+  playlistDialog.classList.add('hidden'); // Inicialmente escondido
+  playlistDialog.showModal();
+  setTimeout(() => {
+      playlistDialog.classList.remove('hidden');
+      playlistDialog.classList.add('showing');
+  }, 10); // Timeout pequeño para activar la animación
+});
+
+let imageBase64;  // variable global que contiene la imagen en base 64
+
+
+function loadPlaylists() {
+  const playlistContainer = document.getElementById('user-playlists');
+  const objStr = localStorage.getItem('storedPlaylist');
+
+  if (objStr) {
+    playlistContainer.innerHTML = '';
+    const obj = JSON.parse(objStr); 
+
+    obj.forEach(item => {
+
+      if (item.img) { // si tiene una imagen
+        const html = `
+          <li>
+            <img src="${item.img}" id="user-image">
+            <div>
+              <p>${item.title}</p>
+            </div>
+          </li>
+        `;
+
+        playlistContainer.innerHTML += html;
+      } else { // si solo tiene titulo le ponemos el default icon
+        const html = `
+          <li>
+            <div id="default-image"><img src="assets/images/music-solid-white.svg" id="icon-default"></div>
+            <div>
+              <p>${item.title}</p>
+            </div>
+          </li>
+        `;
+        playlistContainer.innerHTML += html;
+      }
+
+    });
+  } else {  // si no exite la key: storedPlaylist
+    const createArray =  JSON.stringify([]);
+    localStorage.setItem('storedPlaylist', createArray);
+  }
+}
+
+
+function storeImageBase64(title) {
+  const storedObject = localStorage.getItem('storedPlaylist');
+  const obj = JSON.parse(storedObject);
+
+  const text = title;
+
+  if (imageBase64) {
+    const newObj = {
+      title: text,
+      img: imageBase64
+    }
+    
+    obj.push(newObj);
+
+    // Convertir el objeto a una cadena JSON
+    const updatePlaylists = JSON.stringify(obj);
+
+    // Almacenar la cadena JSON en localStorage
+    localStorage.setItem('storedPlaylist', updatePlaylists);
+    loadPlaylists();
+  } else {
+    const newObj = {
+      title: text
+    }
+
+    obj.push(newObj);
+
+    const updatePlaylists = JSON.stringify(obj);
+    localStorage.setItem('storedPlaylist', updatePlaylists);
+    loadPlaylists();
+  }
+
+}
+
+
+
+formCreatePlaylist.addEventListener('submit', (event) => {
+  event.preventDefault(); // Previene el comportamiento por defecto (recarga de página)
+
+  // Work with data
+  const playlistName = document.getElementById('input-txt-pst').value;
+  
+  if (coverPlaylist) {
+    storeImageBase64(playlistName); 
+    console.log(`El nombre de la playlist es: ${playlistName} y la imageb ${coverPlaylist}`);
+  }
+
+  console.log(`El nombre de la playlist es: ${playlistName}`);
+
+  // Close Dialog
+  playlistDialog.classList.remove('showing');
+    setTimeout(() => {
+        playlistDialog.close();
+    }, 500); // Coincide con el tiempo de la transición CSS
+});
+
+
+coverPlaylist.addEventListener('change', () => {
+  if (coverPlaylist.files && coverPlaylist.files[0]) {
+    document.getElementById('pst-no-file').innerHTML = 'File Selected';
+
+    const file = coverPlaylist.files[0];
+    const reader = new FileReader(); // Instanciamos FileReader
+
+    reader.onload = function(e) {
+      const img = new Image();
+      img.src = e.target.result;
+
+      img.onload = function() {
+        // Crear un canvas para redimensionar la imagen
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+
+        // Establecer el tamaño del canvas
+        canvas.width = 200;
+        canvas.height = 200;
+
+        // Dibujar la imagen redimensionada en el canvas
+        ctx.drawImage(img, 0, 0, 200, 200);
+
+        // Convertir el contenido del canvas a Base64
+        imageBase64 = canvas.toDataURL('image/jpeg', 0.7);
+
+        // Actualizar la vista previa
+        const userImg = document.getElementById('user-img-pst');
+        userImg.src = imageBase64;
+
+
+        // Ocultar la imagen por defecto y mostrar la imagen
+        document.getElementById('default-pst-img').style.display = 'none';
+        userImg.style.display = 'block';
+      }
+    }
+
+    // Leemos el archivo como una URL de datos
+    reader.readAsDataURL(file);
+  } else {
+    document.getElementById('pst-no-file').innerHTML = 'No File Selected';
+
+    // Mostrar la imagen por defecto y ocultar la imagen cargada
+    document.getElementById('default-pst-img').style.display = 'block';
+    document.getElementById('user-img-pst').style.display = 'none';
+  }
 });
