@@ -1,6 +1,7 @@
 import { fetchSongs } from '../modules/fetching.js';
 import { getPlaysCount, updatePlayCount } from '../modules/playsCounter.js';
 import { getFavoriteSong } from '../modules/favoriteSong.js';
+import { removeActive } from '../utils/removeActive.js';
 
 // ELEMENTS
 const userSongs = document.querySelector('.userSongs');
@@ -16,7 +17,9 @@ const playerImg = document.getElementById('p-img'),
   createPlaylistBtn = document.getElementById('c-playlist'),
   playlistDialog = document.getElementById('playlist-dialog'),
   formCreatePlaylist = document.getElementById('form-pst'),
-  coverPlaylist = document.getElementById('pst-file');
+  coverPlaylist = document.getElementById('pst-file'),
+  playlistContainer = document.getElementById('user-playlists'),
+  homeNavegation = document.querySelector('.home-nav');
 
 // Ruta de los iconos del player
 const playIcon = 'assets/images/play-solid.svg';
@@ -32,7 +35,10 @@ let currentAudio,
   currentArtist,
   currentTimeSong,
   currentDurationSong,
-  musicIndex = 0;
+  musicIndex = 0,
+  openEllipsisContainer = null,
+  imageBase64;  // variable global que contiene la imagen en base 64
+
 
 // Load Favorite Component
 getFavoriteSong();
@@ -58,10 +64,31 @@ fetchSongs().then(songs => {
         </div>
 
         <div id="right-song-item">
-          <img src="assets/images/heart-regular.svg" alt="">
+          <img src="assets/images/heart-regular.svg">
           <div class="home-duration ">
             <p class="gray">${song.duration}</p>
-            <img src="assets/images/ellipsis-solid.svg" alt="">
+            <img src="assets/images/plus-solid.svg" class="ellipsis-btn">
+          </div>
+        </div>
+
+        <div class="ellipsis-container">
+          <div id="top-elip">
+            <img src="assets/images/xmark-solid-gray.svg" class="close-elip">
+            <p>Add to playlist</p>
+          </div>
+          <div class="select-pst">
+              <div class="items-to-pst">
+                <img src="assets/images/covers/3AM.webp">
+                <p>item example</p>
+              </div>
+              <div class="items-to-pst">
+                <img src="assets/images/covers/3AM.webp">
+                <p>item example</p>
+              </div>
+              <div class="items-to-pst">
+                <img src="assets/images/covers/3AM.webp">
+                <p>item example</p>
+              </div>
           </div>
         </div>
       </li>
@@ -200,6 +227,79 @@ function updateCurrentSong() {
   localStorage.setItem('currentSong', JSON.stringify(savedSong));
 }
 
+function loadPlaylists() {
+  const objStr = localStorage.getItem('storedPlaylist');
+
+  if (objStr) {
+    playlistContainer.innerHTML = '';
+    const obj = JSON.parse(objStr); 
+
+    obj.forEach((item, index) => {
+
+      if (item.img) { // si tiene una imagen
+        const html = `
+          <li class="pst-item-side" data-pos="${index}">
+            <img src="${item.img}" id="user-image">
+            <div>
+              <p>${item.title}</p>
+            </div>
+          </li>
+        `;
+
+        playlistContainer.innerHTML += html;
+      } else { // si solo tiene titulo le ponemos el default icon
+        const html = `
+          <li class="pst-item-side" data-pos="${index}">
+            <div id="default-image"><img src="assets/images/music-solid-white.svg" id="icon-default"></div>
+            <div>
+              <p>${item.title}</p>
+            </div>
+          </li>
+        `;
+        playlistContainer.innerHTML += html;
+      }
+
+    });
+  } else {  // si no exite la key: storedPlaylist
+    const createArray =  JSON.stringify([]);
+    localStorage.setItem('storedPlaylist', createArray);
+  }
+}
+
+function storeImageBase64(title) {
+  const storedObject = localStorage.getItem('storedPlaylist');
+  const obj = JSON.parse(storedObject);
+
+  const text = title;
+
+  if (imageBase64) {
+    const newObj = {
+      title: text,
+      img: imageBase64
+    }
+    
+    obj.push(newObj);
+
+    // Convertir el objeto a una cadena JSON
+    const updatePlaylists = JSON.stringify(obj);
+
+    // Almacenar la cadena JSON en localStorage
+    localStorage.setItem('storedPlaylist', updatePlaylists);
+    loadPlaylists();
+  } else {
+    const newObj = {
+      title: text
+    }
+
+    obj.push(newObj);
+
+    const updatePlaylists = JSON.stringify(obj);
+    localStorage.setItem('storedPlaylist', updatePlaylists);
+    loadPlaylists();
+  }
+
+}
+
 
 // ----- Event Listeners ------
 playBtn.addEventListener('click', () => {
@@ -268,85 +368,6 @@ createPlaylistBtn.addEventListener('click', () => {
   }, 10); // Timeout pequeño para activar la animación
 });
 
-let imageBase64;  // variable global que contiene la imagen en base 64
-
-
-function loadPlaylists() {
-  const playlistContainer = document.getElementById('user-playlists');
-  const objStr = localStorage.getItem('storedPlaylist');
-
-  if (objStr) {
-    playlistContainer.innerHTML = '';
-    const obj = JSON.parse(objStr); 
-
-    obj.forEach(item => {
-
-      if (item.img) { // si tiene una imagen
-        const html = `
-          <li>
-            <img src="${item.img}" id="user-image">
-            <div>
-              <p>${item.title}</p>
-            </div>
-          </li>
-        `;
-
-        playlistContainer.innerHTML += html;
-      } else { // si solo tiene titulo le ponemos el default icon
-        const html = `
-          <li>
-            <div id="default-image"><img src="assets/images/music-solid-white.svg" id="icon-default"></div>
-            <div>
-              <p>${item.title}</p>
-            </div>
-          </li>
-        `;
-        playlistContainer.innerHTML += html;
-      }
-
-    });
-  } else {  // si no exite la key: storedPlaylist
-    const createArray =  JSON.stringify([]);
-    localStorage.setItem('storedPlaylist', createArray);
-  }
-}
-
-
-function storeImageBase64(title) {
-  const storedObject = localStorage.getItem('storedPlaylist');
-  const obj = JSON.parse(storedObject);
-
-  const text = title;
-
-  if (imageBase64) {
-    const newObj = {
-      title: text,
-      img: imageBase64
-    }
-    
-    obj.push(newObj);
-
-    // Convertir el objeto a una cadena JSON
-    const updatePlaylists = JSON.stringify(obj);
-
-    // Almacenar la cadena JSON en localStorage
-    localStorage.setItem('storedPlaylist', updatePlaylists);
-    loadPlaylists();
-  } else {
-    const newObj = {
-      title: text
-    }
-
-    obj.push(newObj);
-
-    const updatePlaylists = JSON.stringify(obj);
-    localStorage.setItem('storedPlaylist', updatePlaylists);
-    loadPlaylists();
-  }
-
-}
-
-
 
 formCreatePlaylist.addEventListener('submit', (event) => {
   event.preventDefault(); // Previene el comportamiento por defecto (recarga de página)
@@ -367,7 +388,6 @@ formCreatePlaylist.addEventListener('submit', (event) => {
         playlistDialog.close();
     }, 500); // Coincide con el tiempo de la transición CSS
 });
-
 
 coverPlaylist.addEventListener('change', () => {
   if (coverPlaylist.files && coverPlaylist.files[0]) {
@@ -415,4 +435,63 @@ coverPlaylist.addEventListener('change', () => {
     document.getElementById('default-pst-img').style.display = 'block';
     document.getElementById('user-img-pst').style.display = 'none';
   }
+});
+
+userSongs.addEventListener('click', (event) => {
+  if (event.target.classList.contains('ellipsis-btn')) {
+    const liElement = event.target.closest('li');
+    const ellipsisContainer = liElement.querySelector('.ellipsis-container');
+
+    // Si hay un contenedor abierto, ciérralo
+    if (openEllipsisContainer && openEllipsisContainer !== ellipsisContainer) {
+      openEllipsisContainer.classList.remove('active');
+    }
+
+    // Muestra el contenedor clicado y actualiza el estado del contenedor abierto
+    ellipsisContainer.classList.add('active');
+    openEllipsisContainer = ellipsisContainer;
+
+    // Añade un listener al botón de cerrar dentro del contenedor
+    liElement.querySelector('.close-elip').addEventListener('click', (closeEvent) => {
+      closeEvent.stopPropagation(); // Evita que el clic en el botón de cerrar cierre el contenedor
+      ellipsisContainer.classList.remove('active');
+      openEllipsisContainer = null;
+    });
+  }
+});
+
+// Evento global para cerrar el contenedor si se hace clic fuera de él
+document.addEventListener('click', (event) => {
+  // Solo cerrar el contenedor si está abierto y el clic fue fuera del contenedor y su botón
+  if (openEllipsisContainer && !event.target.closest('.ellipsis-container') && !event.target.classList.contains('ellipsis-btn')) {
+    openEllipsisContainer.classList.remove('active');
+    openEllipsisContainer = null;
+  }
+});
+
+playlistContainer.addEventListener('click', (event) => {
+  const liElement = event.target.closest('li');
+  
+  if (liElement) {
+    removeActive('pst-item-side');
+    // Search position inside the array with playlists (localStorage)
+    const pos = liElement.getAttribute('data-pos'); // Obtener el ID desde el data-attribute
+    console.log(pos)
+
+    homeNavegation.classList.remove('active');
+    liElement.classList.add('active');
+
+    document.getElementById('home-window').style.display = 'none';
+    document.getElementById('playlist-window').style.display = 'flex';
+    document.getElementById('window-pos').innerHTML = 'Playlist';
+
+  }
+});
+
+homeNavegation.addEventListener('click', () => {
+  removeActive('pst-item-side');
+  !homeNavegation.classList.contains('active') && homeNavegation.classList.add('active');
+  document.getElementById('home-window').style.display = 'flex';
+  document.getElementById('playlist-window').style.display = 'none';
+  document.getElementById('window-pos').innerHTML = 'Your Library';
 });

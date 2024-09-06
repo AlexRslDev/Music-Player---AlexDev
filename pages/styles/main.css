@@ -150,7 +150,10 @@
 #place-app {
   gap:  63px;
 
-  span {cursor: default;}
+  span {
+    width: 92px;
+    cursor: default;
+  }
   div {
     position: relative;
     img {
@@ -306,6 +309,7 @@
     gap: 8px;
   }
   li {
+    position: relative;
     justify-content: space-between;
     padding: 10px 14px;
     border-radius: 10px;
@@ -328,6 +332,7 @@
     font-size: 14px;
     img {
       width: 40px;
+      height: 40px;
       border-radius: 8px;
     }
   }
@@ -335,7 +340,7 @@
   #right-song-item {
     gap: 33px;
     img {
-      width: 22px;
+      width: 20px;
       opacity: 0;
     }
     div {
@@ -432,6 +437,14 @@
     }
   }
 }
+
+
+/* --------- Playlist Window ------ */
+
+#playlist-window {
+  display: none;
+}
+
 
 
 /* --- Player --- */
@@ -792,3 +805,76 @@
 @media screen and (max-width: 352px) {#right-song-item div {font-size: 14px;}}
 
 /* NOTE: missing categories icon */
+
+
+/* Add song to playlist */
+.ellipsis-container {
+  width: 200px;
+  height: 150px;
+  display: none;
+  position: absolute;
+  padding: 8px 0 5px 0;
+  right: 0;
+  top: 65px; /* btn: -35px, playlist list: -100px */
+  z-index: 9999;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background-color: var(--main-color);
+  cursor: default;
+
+  &::-webkit-scrollbar {width: 0;}
+  &::-webkit-scrollbar-thumb {background: none;}
+  &::-webkit-scrollbar-track {background-color: transparent;}
+
+  p{margin-left: 8px;}
+  &.active {
+    display: block;
+  }
+  &, .items-to-pst img, .items-to-pst {
+    border-radius: 8px;
+  }
+
+  #top-elip {
+    display: flex;
+    align-items: center;
+    margin: 0 0 8px 14px;
+    img {
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+
+      &:hover {
+        background-color: white;
+        border-radius: 3px;
+      }
+    }
+  }
+
+  .items-to-pst {
+    cursor: pointer;
+    transition: all .2s ease-in;
+    &:hover {
+      background-color: #ccc;
+    }
+  }
+  
+  .select-pst {
+    padding: 5px;
+  
+    .items-to-pst {
+      width: 100%;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      padding: 0 5px;
+
+      img {
+        width: 30px;
+        height: 30px;
+      }
+      p {
+        font-size: 14px;
+      }
+    }
+  }
+}
