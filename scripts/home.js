@@ -1,7 +1,8 @@
 import { fetchSongs } from '../modules/fetching.js';
 import { getPlaysCount, updatePlayCount } from '../modules/playsCounter.js';
 import { getFavoriteSong } from '../modules/favoriteSong.js';
-import { removeActive } from '../utils/removeActive.js';
+import { removeActive, includeActive } from '../utils/removeActive.js';
+import { getStoredPlaylist } from '../utils/getLocalStorage.js';
 
 // ELEMENTS
 const userSongs = document.querySelector('.userSongs');
@@ -39,13 +40,13 @@ let currentAudio,
   openEllipsisContainer = null,
   imageBase64;  // variable global que contiene la imagen en base 64
 
-
 // Load Favorite Component
 getFavoriteSong();
 // Load Current user's song
 getCurrentSong();
 // load playlist
 loadPlaylists();
+
 
 // Include HTML user's songs on the container
 fetchSongs().then(songs => {
@@ -54,7 +55,7 @@ fetchSongs().then(songs => {
   function returnSong(song) {
     // Generar HTML con la información de la canción y duración
     const songHTML = `
-      <li data-id="${song.id}" id="userSong">
+      <li data-id="${song.id}" id="userSong" class="userSongItem">
         <div id="left-song-item">
           <img src="assets/images/covers/${song.cover}" alt="">
           <div>
@@ -78,15 +79,12 @@ fetchSongs().then(songs => {
           </div>
           <div class="select-pst">
               <div class="items-to-pst">
-                <img src="assets/images/covers/3AM.webp">
                 <p>item example</p>
               </div>
               <div class="items-to-pst">
-                <img src="assets/images/covers/3AM.webp">
                 <p>item example</p>
               </div>
               <div class="items-to-pst">
-                <img src="assets/images/covers/3AM.webp">
                 <p>item example</p>
               </div>
           </div>
@@ -98,6 +96,7 @@ fetchSongs().then(songs => {
     userSongs.innerHTML += songHTML;
   };
 });
+
 
 // Play music by ID
 function playSongById(id) {
@@ -123,6 +122,9 @@ function playSongById(id) {
 
         currentAudio.play()
           .then(() => {
+            removeActive('userSongItem');
+            includeActive('userSongItem', id);
+
             // guardar los datos de la cancion actual para el localStorage
             currentImg = `assets/images/covers/${song.cover}`;
             currentName = song.name;
@@ -153,6 +155,8 @@ function playSongById(id) {
               playBtn.src = playIcon;
               changeMusic(1)
               getFavoriteSong();
+
+              removeActive('userSongItem');
             });
 
           })
@@ -250,7 +254,7 @@ function loadPlaylists() {
       } else { // si solo tiene titulo le ponemos el default icon
         const html = `
           <li class="pst-item-side" data-pos="${index}">
-            <div id="default-image"><img src="assets/images/music-solid-white.svg" id="icon-default"></div>
+            <img src="assets/images/default-icon.webp" id="default-image">
             <div>
               <p>${item.title}</p>
             </div>
@@ -266,7 +270,7 @@ function loadPlaylists() {
   }
 }
 
-function storeImageBase64(title) {
+function updatePlaylist(title) {
   const storedObject = localStorage.getItem('storedPlaylist');
   const obj = JSON.parse(storedObject);
 
@@ -275,7 +279,8 @@ function storeImageBase64(title) {
   if (imageBase64) {
     const newObj = {
       title: text,
-      img: imageBase64
+      img: imageBase64,
+      songs: []
     }
     
     obj.push(newObj);
@@ -288,7 +293,8 @@ function storeImageBase64(title) {
     loadPlaylists();
   } else {
     const newObj = {
-      title: text
+      title: text,
+      songs: []
     }
 
     obj.push(newObj);
@@ -300,6 +306,113 @@ function storeImageBase64(title) {
 
 }
 
+function addSongToUserPlaylist(ellipsisContainer) {
+  let playlistContainer = ellipsisContainer.querySelector('.select-pst');
+  const objStr = localStorage.getItem('storedPlaylist');
+
+  if (objStr) {
+    playlistContainer.innerHTML = '';
+    const obj = JSON.parse(objStr); 
+    obj.forEach((item, index) => {
+      
+      const html = `
+        <div class="items-to-pst" data-pos="${index}">
+          <p>${item.title}</p>
+        </div>
+      `;
+
+      playlistContainer.innerHTML += html;
+    });
+  }
+}
+
+function songToPlaylist(id, playlist) {
+  console.log(id, playlist)
+  // get obj from localStorage
+  const objStr = localStorage.getItem('storedPlaylist');
+  const obj = JSON.parse(objStr);
+
+  const songs = obj[Number(playlist)].songs;
+
+  if (!songs.includes(id)) {
+    songs.push(id);
+    // Convertir el objeto a una cadena JSON
+    const updatePlaylists = JSON.stringify(obj);
+  
+    // Almacenar la cadena JSON en localStorage
+    localStorage.setItem('storedPlaylist', updatePlaylists);
+  }
+}
+
+function loadPlaylistContent (position) {
+  // Reset some values
+  document.getElementById('pst-song-list').innerHTML = '';
+  document.getElementById('ctn-pst-img').src = 'assets/images/default-icon.webp';
+
+  const obj = getStoredPlaylist();
+  const thisPlaylist = obj[position];
+  
+  // TOP: text content windows playlist
+  document.getElementById('ctn-pst-ttle').innerHTML = thisPlaylist.title;
+  document.getElementById('ctn-pst-qtt').innerHTML = thisPlaylist.songs.length;
+  if (thisPlaylist.img) {
+    document.getElementById('ctn-pst-img').src = thisPlaylist.img;
+  }
+
+  // Load the ArrayIndex variable with the id's of playlist songs
+
+  // fetching songs
+  fetchSongs().then(dataSongs => {
+    dataSongs.forEach(dataSong => {
+      // Verificar que dataSong tiene un id
+      if (dataSong.id && thisPlaylist.songs.some(song => song === dataSong.id)) {
+        const html = `
+          <li>
+            <div id="lft-sng-pst-itm">
+              <img src="assets/images/covers/${dataSong.cover}">
+              <div>
+                <span>${dataSong.name}</span>
+                <p class="gray">${dataSong.artist}</p>
+              </div>
+            </div>
+      
+            <div id="rght-sng-pst-itm">
+              <img src="assets/images/heart-regular.svg">
+              <div class="pst-duration ">
+                <p class="gray">${dataSong.duration}</p>
+                <img src="assets/images/ellipsis-solid.svg" class="ellipsis-btn">
+              </div>
+            </div>
+
+            <!-- This need to change -->
+            <div class="ellipsis-container">
+              <div id="top-elip">
+                <img src="assets/images/xmark-solid-gray.svg" class="close-elip">
+                <p>Add to playlist</p>
+              </div>
+              <div class="select-pst">
+                  <div class="items-to-pst">
+                    <p>item example</p>
+                  </div>
+                  <div class="items-to-pst">
+                    <p>item example</p>
+                  </div>
+                  <div class="items-to-pst">
+                    <p>item example</p>
+                  </div>
+              </div>
+            </div>
+          </li>
+        `;
+        document.getElementById('pst-song-list').innerHTML += html;
+
+      }
+
+    });
+
+  });
+
+}
 
 // ----- Event Listeners ------
 playBtn.addEventListener('click', () => {
@@ -338,8 +451,11 @@ nextBtn.addEventListener('click', () => changeMusic(1));
 
 // When the User click a song from songs container
 userSongs.addEventListener('dblclick', (event) => {
+  removeActive('userSongItem');
+
   // Busca el <li> más cercano al elemento clicado
   const liElement = event.target.closest('li');
+  liElement.classList.add('active');
   
   // Verifica si existe el <li> y si su id es 'song'
   if (liElement && liElement.id === 'userSong') {
@@ -376,7 +492,7 @@ formCreatePlaylist.addEventListener('submit', (event) => {
   const playlistName = document.getElementById('input-txt-pst').value;
   
   if (coverPlaylist) {
-    storeImageBase64(playlistName); 
+    updatePlaylist(playlistName); 
     console.log(`El nombre de la playlist es: ${playlistName} y la imageb ${coverPlaylist}`);
   }
 
@@ -440,6 +556,7 @@ coverPlaylist.addEventListener('change', () => {
 userSongs.addEventListener('click', (event) => {
   if (event.target.classList.contains('ellipsis-btn')) {
     const liElement = event.target.closest('li');
+    console.log(liElement)
     const ellipsisContainer = liElement.querySelector('.ellipsis-container');
 
     // Si hay un contenedor abierto, ciérralo
@@ -450,6 +567,7 @@ userSongs.addEventListener('click', (event) => {
     // Muestra el contenedor clicado y actualiza el estado del contenedor abierto
     ellipsisContainer.classList.add('active');
     openEllipsisContainer = ellipsisContainer;
+    addSongToUserPlaylist(ellipsisContainer);
 
     // Añade un listener al botón de cerrar dentro del contenedor
     liElement.querySelector('.close-elip').addEventListener('click', (closeEvent) => {
@@ -457,6 +575,17 @@ userSongs.addEventListener('click', (event) => {
       ellipsisContainer.classList.remove('active');
       openEllipsisContainer = null;
     });
+
+    document.querySelectorAll('.items-to-pst').forEach(element => {
+      element.addEventListener('click', (event) => {
+        const id = liElement.getAttribute('data-id');
+        const pos = event.target.getAttribute('data-pos');
+        songToPlaylist(id, pos);
+        ellipsisContainer.classList.remove('active');
+        openEllipsisContainer = null;
+      })
+    })
+
   }
 });
 
@@ -469,6 +598,10 @@ document.addEventListener('click', (event) => {
   }
 });
 
+
+
+// navegation
+
 playlistContainer.addEventListener('click', (event) => {
   const liElement = event.target.closest('li');
   
@@ -476,13 +609,16 @@ playlistContainer.addEventListener('click', (event) => {
     removeActive('pst-item-side');
     // Search position inside the array with playlists (localStorage)
     const pos = liElement.getAttribute('data-pos'); // Obtener el ID desde el data-attribute
+
     console.log(pos)
+    loadPlaylistContent(Number(pos))
+
 
     homeNavegation.classList.remove('active');
     liElement.classList.add('active');
 
     document.getElementById('home-window').style.display = 'none';
-    document.getElementById('playlist-window').style.display = 'flex';
+    document.getElementById('playlist-window').style.display = 'block';
     document.getElementById('window-pos').innerHTML = 'Playlist';
 
   }

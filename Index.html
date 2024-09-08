@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="pages/styles/general.css">
   <link rel="stylesheet" href="pages/styles/main.css">
+  <link rel="stylesheet" href="pages/styles/playlists-window.css">
   <script type="module" src="scripts/home.js"></script>
   <title>Document</title>
 </head>
@@ -254,7 +255,31 @@
         </div>
 
         <div id="playlist-window">
-          THIS IS A PLAYLIST WINDOW
+
+          <div id="top-pst-wd">
+            <img src="assets/images/default-icon.webp" id="ctn-pst-img">
+            <div id="info-content-pst">
+              <div id="tp-txt-pst">
+                <p>Playlist</p>
+                <span id="ctn-pst-ttle">My Name Playlist</span>
+                <p id="ctn-pst-qtt">30 songs</p>
+              </div>
+              <button id="play-pst">
+                <img src="assets/images/circle-play-solid-blue.svg">
+                <p>Play Now</p>
+              </button>
+            </div>
+
+            <div id="oder-by-pst">
+              <p class="gray">Recets</p>
+              <img src="assets/images/bars-solid.svg">
+            </div>
+          </div>
+
+          <div>
+            <ul id="pst-song-list"></ul>
+          </div>
+
         </div>
 
       </div>

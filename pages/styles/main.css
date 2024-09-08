@@ -84,6 +84,8 @@
 
 #playlist-songs {
   #default-image {
+    min-width: 37px;
+    min-height: 37px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -837,7 +839,8 @@
   #top-elip {
     display: flex;
     align-items: center;
-    margin: 0 0 8px 14px;
+    padding: 0 0 12px 14px;
+    border-bottom: 2px solid #fff;
     img {
       width: 20px;
       height: 20px;
