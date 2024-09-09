@@ -77,17 +77,7 @@ fetchSongs().then(songs => {
             <img src="assets/images/xmark-solid-gray.svg" class="close-elip">
             <p>Add to playlist</p>
           </div>
-          <div class="select-pst">
-              <div class="items-to-pst">
-                <p>item example</p>
-              </div>
-              <div class="items-to-pst">
-                <p>item example</p>
-              </div>
-              <div class="items-to-pst">
-                <p>item example</p>
-              </div>
-          </div>
+          <div class="select-pst"></div>
         </div>
       </li>
     `;
@@ -96,7 +86,6 @@ fetchSongs().then(songs => {
     userSongs.innerHTML += songHTML;
   };
 });
-
 
 // Play music by ID
 function playSongById(id) {
@@ -367,7 +356,7 @@ function loadPlaylistContent (position) {
       // Verificar que dataSong tiene un id
       if (dataSong.id && thisPlaylist.songs.some(song => song === dataSong.id)) {
         const html = `
-          <li>
+          <li id="userSongPlaylist" class="userPlaylistItem" data-id="${dataSong.id}">
             <div id="lft-sng-pst-itm">
               <img src="assets/images/covers/${dataSong.cover}">
               <div>
@@ -477,6 +466,14 @@ favoriteSongBtn.addEventListener('click', (event) => {
 
 createPlaylistBtn.addEventListener('click', () => {
   playlistDialog.classList.add('hidden'); // Inicialmente escondido
+  
+  // Rest text before open dialog
+  const userImg = document.getElementById('user-img-pst');
+  document.getElementById('input-txt-pst').value = '';
+  document.getElementById('pst-file').value = '';
+  userImg.src = 'assets/images/default-icon.webp';
+  
+
   playlistDialog.showModal();
   setTimeout(() => {
       playlistDialog.classList.remove('hidden');
@@ -534,11 +531,6 @@ coverPlaylist.addEventListener('change', () => {
         // Actualizar la vista previa
         const userImg = document.getElementById('user-img-pst');
         userImg.src = imageBase64;
-
-
-        // Ocultar la imagen por defecto y mostrar la imagen
-        document.getElementById('default-pst-img').style.display = 'none';
-        userImg.style.display = 'block';
       }
     }
 
@@ -546,10 +538,6 @@ coverPlaylist.addEventListener('change', () => {
     reader.readAsDataURL(file);
   } else {
     document.getElementById('pst-no-file').innerHTML = 'No File Selected';
-
-    // Mostrar la imagen por defecto y ocultar la imagen cargada
-    document.getElementById('default-pst-img').style.display = 'block';
-    document.getElementById('user-img-pst').style.display = 'none';
   }
 });
 
@@ -579,10 +567,16 @@ userSongs.addEventListener('click', (event) => {
     document.querySelectorAll('.items-to-pst').forEach(element => {
       element.addEventListener('click', (event) => {
         const id = liElement.getAttribute('data-id');
-        const pos = event.target.getAttribute('data-pos');
+        let pos = event.target.getAttribute('data-pos');
+
+        if (!pos) {
+          pos = event.target.closest('div').getAttribute('data-pos');
+        }
+        
         songToPlaylist(id, pos);
         ellipsisContainer.classList.remove('active');
         openEllipsisContainer = null;
+        
       })
     })
 
@@ -597,8 +591,6 @@ document.addEventListener('click', (event) => {
     openEllipsisContainer = null;
   }
 });
-
-
 
 // navegation
 
@@ -630,4 +622,19 @@ homeNavegation.addEventListener('click', () => {
   document.getElementById('home-window').style.display = 'flex';
   document.getElementById('playlist-window').style.display = 'none';
   document.getElementById('window-pos').innerHTML = 'Your Library';
+});
+
+// play playlist song
+document.getElementById('pst-song-list').addEventListener('dblclick', (event) => {
+  removeActive('userPlaylistItem');
+
+  // Busca el <li> más cercano al elemento clicado
+  const liElement = event.target.closest('li');
+  liElement.classList.add('active');
+
+  // Verifica si existe el <li> y si su id es 'song'
+  if (liElement && liElement.id === 'userSongPlaylist') {
+    const id = liElement.getAttribute('data-id'); // Obtener el ID desde el data-attribute
+    playSongById(id);
+  }
 });

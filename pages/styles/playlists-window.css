@@ -86,6 +86,10 @@
       background-color: var(--main-color);
       #rght-sng-pst-itm img {opacity: 100;}
     }
+    &.active {
+      background-color: var(--main-color);
+      #rght-sng-pst-itm img {opacity: 100;}
+    }
 
     #lft-sng-pst-itm {
       align-items: center;
