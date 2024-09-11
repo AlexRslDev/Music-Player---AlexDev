@@ -25,6 +25,10 @@ html {
   scroll-behavior: smooth;
 }
 
+body {
+  overflow: hidden;
+}
+
 ul {
   list-style: none;
 }

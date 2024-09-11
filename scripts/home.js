@@ -39,7 +39,8 @@ let currentAudio,
   musicIndex = 0,
   openEllipsisContainer = null,
   imageBase64,  // variable global que contiene la imagen en base 64
-  currentInterface = 'main';
+  currentInterface = 'main',
+  currentPlaylist;
 
 let songsToPlay = [];
 
@@ -55,10 +56,9 @@ loadInitialSongsArray();
 
 // Include HTML user's songs on the container
 fetchSongs().then(songs => {
-  songs.forEach(song => returnSong(song));
+  const fragment = document.createDocumentFragment();
 
-  function returnSong(song) {
-    // Generar HTML con la información de la canción y duración
+  songs.forEach(song => {
     const songHTML = `
       <li data-id="${song.id}" id="userSong" class="userSongItem">
         <div id="left-song-item">
@@ -87,9 +87,15 @@ fetchSongs().then(songs => {
       </li>
     `;
 
-    // agregar el HTML a la página
-    userSongs.innerHTML += songHTML;
-  };
+    // Crear un contenedor temporal para el HTML
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = songHTML;
+
+    // Agregar el primer hijo del contenedor temporal al fragment
+    fragment.appendChild(tempDiv.firstElementChild);
+  });
+
+  userSongs.appendChild(fragment);
 });
 
 // Play music by ID
@@ -170,7 +176,7 @@ function playSongById(id) {
       }
 
     });
-}
+};
 
 function updateProgressBar() {
   const duration = currentAudio.duration,
@@ -180,21 +186,21 @@ function updateProgressBar() {
   currentTimeSong = currentTime;
   currentDurationSong = duration;
   updateCurrentSong();
-}
+};
 
 function setProgressBar(e) {
   console.log('user click player')
   const width = playerProgress.clientWidth;
   const clickX = e.offsetX;
   currentAudio.currentTime = (clickX / width) * currentAudio.duration;
-}
+};
 
 function changeMusic(direction) {
   // Search the position of the song into de array global
   musicIndex = (musicIndex + direction + songsToPlay.length) % songsToPlay.length;
   const id = songsToPlay[musicIndex];
   playSongById(id);
-}
+};
 
 function getCurrentSong() {
   const savedSong = JSON.parse(localStorage.getItem('currentSong')) || {};
@@ -215,7 +221,7 @@ function getCurrentSong() {
     playerArtist.innerHTML = currentArtist;
     progress.style.width = `${(currentTimeSong / currentDurationSong) * 100}%`;
   }
-}
+};
 
 function updateCurrentSong() {
   let savedSong = JSON.parse(localStorage.getItem('currentSong')) || {};
@@ -228,7 +234,7 @@ function updateCurrentSong() {
   savedSong.currentDurationSong = String(currentDurationSong);
   // Save
   localStorage.setItem('currentSong', JSON.stringify(savedSong));
-}
+};
 
 function loadPlaylists() {
   const objStr = localStorage.getItem('storedPlaylist');
@@ -246,6 +252,7 @@ function loadPlaylists() {
             <div>
               <p>${item.title}</p>
             </div>
+            <div id="delete-btn-pst">Delete</div>
           </li>
         `;
 
@@ -257,6 +264,7 @@ function loadPlaylists() {
             <div>
               <p>${item.title}</p>
             </div>
+            <div id="delete-btn-pst">Delete</div>
           </li>
         `;
         playlistContainer.innerHTML += html;
@@ -267,7 +275,7 @@ function loadPlaylists() {
     const createArray =  JSON.stringify([]);
     localStorage.setItem('storedPlaylist', createArray);
   }
-}
+};
 
 function updatePlaylist(title) {
   const storedObject = localStorage.getItem('storedPlaylist');
@@ -290,6 +298,7 @@ function updatePlaylist(title) {
     // Almacenar la cadena JSON en localStorage
     localStorage.setItem('storedPlaylist', updatePlaylists);
     loadPlaylists();
+    imageBase64 = '';
   } else {
     const newObj = {
       title: text,
@@ -303,7 +312,7 @@ function updatePlaylist(title) {
     loadPlaylists();
   }
 
-}
+};
 
 function addSongToUserPlaylist(ellipsisContainer) {
   let playlistContainer = ellipsisContainer.querySelector('.select-pst');
@@ -323,7 +332,7 @@ function addSongToUserPlaylist(ellipsisContainer) {
       playlistContainer.innerHTML += html;
     });
   }
-}
+};
 
 function songToPlaylist(id, playlist) {
   console.log(id, playlist)
@@ -341,7 +350,7 @@ function songToPlaylist(id, playlist) {
     // Almacenar la cadena JSON en localStorage
     localStorage.setItem('storedPlaylist', updatePlaylists);
   }
-}
+};
 
 function loadPlaylistContent (position) {
   // Reset some values
@@ -365,6 +374,8 @@ function loadPlaylistContent (position) {
 
   // fetching songs
   fetchSongs().then(dataSongs => {
+    const fragment = document.createDocumentFragment();
+
     dataSongs.forEach(dataSong => {
       // Verificar que dataSong tiene un id
       if (dataSong.id && thisPlaylist.songs.some(song => song === dataSong.id)) {
@@ -382,46 +393,30 @@ function loadPlaylistContent (position) {
               <img src="assets/images/heart-regular.svg">
               <div class="pst-duration ">
                 <p class="gray">${dataSong.duration}</p>
-                <img src="assets/images/ellipsis-solid.svg" class="ellipsis-btn">
-              </div>
-            </div>
-
-            <!-- This need to change -->
-            <div class="ellipsis-container">
-              <div id="top-elip">
-                <img src="assets/images/xmark-solid-gray.svg" class="close-elip">
-                <p>Add to playlist</p>
-              </div>
-              <div class="select-pst">
-                  <div class="items-to-pst">
-                    <p>item example</p>
-                  </div>
-                  <div class="items-to-pst">
-                    <p>item example</p>
-                  </div>
-                  <div class="items-to-pst">
-                    <p>item example</p>
-                  </div>
+                <img src="assets/images/xmark-solid-gray.svg" class="rm-sg-fpst">
               </div>
             </div>
           </li>
         `;
-        document.getElementById('pst-song-list').innerHTML += html;
 
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = html;
+
+        fragment.appendChild(tempDiv.firstElementChild);
       }
-
     });
-
+    
+    document.getElementById('pst-song-list').appendChild(fragment);
   });
 
-}
+};
 
 function loadInitialSongsArray() {
   fetchSongs().then(songs => {
     songs.forEach(song => songsToPlay.push(song.id));
   });
   console.log(songsToPlay);
-}
+};
 
 async function searchBarData(query) {
   try {
@@ -436,7 +431,7 @@ async function searchBarData(query) {
   } catch (error) {
       console.error('Error loading data:', error);
   }
-}
+};
 
 function showBarResults(filteredResults) {
   searchResults.innerHTML = filteredResults.map(item =>
@@ -446,11 +441,31 @@ function showBarResults(filteredResults) {
       </div>
       `
   ).join('');
-}
+};
 
 function clearResults() {
   searchResults.innerHTML = '';
-}
+};
+
+function closeAllBtns() {
+  const playlistItems = playlistContainer.querySelectorAll('li');
+  
+  playlistItems.forEach(item => {
+    item.querySelector('#delete-btn-pst').style.display = 'none';
+  });
+};
+
+function removePlaylist(position) {
+  const storedObject = localStorage.getItem('storedPlaylist');
+  const obj = JSON.parse(storedObject);
+
+  obj.splice(position, 1);
+
+  const updatePlaylists = JSON.stringify(obj);
+  // Almacenar la cadena JSON en localStorage
+  localStorage.setItem('storedPlaylist', updatePlaylists);
+  loadPlaylists();
+};
 
 // ----- Event Listeners ------
 playBtn.addEventListener('click', () => {
@@ -539,10 +554,7 @@ formCreatePlaylist.addEventListener('submit', (event) => {
   
   if (coverPlaylist) {
     updatePlaylist(playlistName); 
-    console.log(`El nombre de la playlist es: ${playlistName} y la imageb ${coverPlaylist}`);
   }
-
-  console.log(`El nombre de la playlist es: ${playlistName}`);
 
   // Close Dialog
   playlistDialog.classList.remove('showing');
@@ -638,6 +650,10 @@ document.addEventListener('click', (event) => {
   if (openEllipsisContainer && !event.target.closest('.ellipsis-container') && !event.target.classList.contains('ellipsis-btn')) {
     openEllipsisContainer.classList.remove('active');
     openEllipsisContainer = null;
+  };
+
+  if (!event.target.closest('#delete-btn-pst')) { // Si le da click fuera del boton delete de un playlist item
+    closeAllBtns();
   }
 });
 
@@ -646,11 +662,11 @@ document.addEventListener('click', (event) => {
 playlistContainer.addEventListener('click', (event) => {
   const liElement = event.target.closest('li');
   
-  if (liElement) {
+  if (liElement && !liElement.classList.contains('remove')) {
     removeActive('pst-item-side');
     // Search position inside the array with playlists (localStorage)
     const pos = liElement.getAttribute('data-pos'); // Obtener el ID desde el data-attribute
-
+    currentPlaylist = pos;
     console.log(pos)
     loadPlaylistContent(Number(pos))
 
@@ -692,7 +708,6 @@ document.getElementById('pst-song-list').addEventListener('dblclick', (event) =>
 });
 
 // Search bar
-
 searchBar.addEventListener('input', (event) => {
   const query = event.target.value;
   if (query.trim() === '') {
@@ -718,4 +733,42 @@ searchResults.addEventListener('click', (event) => {
   }
 
   document.getElementById('srch-rstls').style.display = 'none';
+});
+
+// Right click on a playlist item
+playlistContainer.addEventListener('contextmenu', (event) => {
+  event.preventDefault();
+  closeAllBtns();
+  const element = event.target.closest('li');   
+  const attribute = element.getAttribute('data-pos'); // posición del objeto en localStorage
+  const deleteBtn = element.querySelector('#delete-btn-pst'); // Usa querySelector aquí
+
+  if (deleteBtn) {
+    deleteBtn.style.display = 'block';
+
+    deleteBtn.addEventListener('click', () => {
+      element.classList.add('remove');
+      removePlaylist(attribute);
+      console.log(`Este es el elemento a eliminar: ${attribute}`)
+    });
+  }
+});
+
+// Delete a song inside a playlist
+document.getElementById('pst-song-list').addEventListener('click', (event) => {
+  const attribute = event.target.closest('li').getAttribute('data-id');
+  if (event.target.classList.contains('rm-sg-fpst')) {  // if it's an x-mark img
+    const storedObject = localStorage.getItem('storedPlaylist');
+    const obj = JSON.parse(storedObject);
+    const songs = obj[currentPlaylist].songs;
+    
+    const index = songs.indexOf(attribute);
+    
+    songs.splice(index, 1);
+    
+    const updatePlaylists = JSON.stringify(obj);
+    // Almacenar la cadena JSON en localStorage
+    localStorage.setItem('storedPlaylist', updatePlaylists);
+    loadPlaylistContent(Number(currentPlaylist));
+  }
 });
