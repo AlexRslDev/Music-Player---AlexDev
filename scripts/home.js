@@ -20,13 +20,13 @@ const playerImg = document.getElementById('p-img'),
   formCreatePlaylist = document.getElementById('form-pst'),
   coverPlaylist = document.getElementById('pst-file'),
   playlistContainer = document.getElementById('user-playlists'),
-  homeNavegation = document.querySelector('.home-nav');
+  homeNavegation = document.querySelector('.home-nav'),
+  searchBar = document.getElementById('srch-bar'),
+  searchResults = document.getElementById('srch-rstls');
 
 // Ruta de los iconos del player
 const playIcon = 'assets/images/play-solid.svg';
 const pauseIcon = 'assets/images/pause-solid.svg';
-
-
 
 // Currents variables
 let currentAudio,
@@ -38,7 +38,10 @@ let currentAudio,
   currentDurationSong,
   musicIndex = 0,
   openEllipsisContainer = null,
-  imageBase64;  // variable global que contiene la imagen en base 64
+  imageBase64,  // variable global que contiene la imagen en base 64
+  currentInterface = 'main';
+
+let songsToPlay = [];
 
 // Load Favorite Component
 getFavoriteSong();
@@ -46,6 +49,8 @@ getFavoriteSong();
 getCurrentSong();
 // load playlist
 loadPlaylists();
+// Load songs id's array with all user songs
+loadInitialSongsArray();
 
 
 // Include HTML user's songs on the container
@@ -100,24 +105,31 @@ function playSongById(id) {
       // Buscar la canción por ID en el array de canciones
       const song = songs.find(song => song.id === id);
 
-      // Buscar la posicion de la cancion dentro del array
-      const indexPositon = songs.findIndex(element => element.id === song.id);
-      currentPosition = indexPositon;
-      // actualizar la posicion
-      musicIndex = indexPositon;
+      // Search the index position inside global songs array
+      const indexPosition = songsToPlay.findIndex(element => element === id)
+      musicIndex = indexPosition;
+      currentPosition = indexPosition;
+
 
       if (song) {
         currentAudio = new Audio(song.path); // Crear un nuevo objeto Audio y asignarlo a currentAudio
 
         currentAudio.play()
           .then(() => {
-            removeActive('userSongItem');
-            includeActive('userSongItem', id);
+            if (currentInterface === 'main') {
+              removeActive('userSongItem');
+              includeActive('userSongItem', id);
+            } else {
+              removeActive('userPlaylistItem');
+              includeActive('userPlaylistItem', id);
+            }
+            
 
             // guardar los datos de la cancion actual para el localStorage
             currentImg = `assets/images/covers/${song.cover}`;
             currentName = song.name;
             currentArtist = song.artist;
+            //currentPosition = 
 
             // Cambiar los datos del player cuando se reproduce una nueva cancion
             playerImg.src = currentImg;
@@ -178,12 +190,10 @@ function setProgressBar(e) {
 }
 
 function changeMusic(direction) {
-  fetchSongs()
-    .then(songs => {
-      musicIndex = (musicIndex + direction + songs.length) % songs.length;
-      const id = songs[musicIndex].id;
-      playSongById(id);
-    });
+  // Search the position of the song into de array global
+  musicIndex = (musicIndex + direction + songsToPlay.length) % songsToPlay.length;
+  const id = songsToPlay[musicIndex];
+  playSongById(id);
 }
 
 function getCurrentSong() {
@@ -349,6 +359,9 @@ function loadPlaylistContent (position) {
   }
 
   // Load the ArrayIndex variable with the id's of playlist songs
+  songsToPlay = [];
+  thisPlaylist.songs.forEach(song => songsToPlay.push(song));
+  console.log(songsToPlay)
 
   // fetching songs
   fetchSongs().then(dataSongs => {
@@ -401,6 +414,42 @@ function loadPlaylistContent (position) {
 
   });
 
+}
+
+function loadInitialSongsArray() {
+  fetchSongs().then(songs => {
+    songs.forEach(song => songsToPlay.push(song.id));
+  });
+  console.log(songsToPlay);
+}
+
+async function searchBarData(query) {
+  try {
+    const response = await fetch('../data/songs.json');
+    const data = await response.json();
+    
+    const filteredResults = data.filter(item =>
+        item.name.toLowerCase().includes(query.toLowerCase())
+    );
+    
+    showBarResults(filteredResults);
+  } catch (error) {
+      console.error('Error loading data:', error);
+  }
+}
+
+function showBarResults(filteredResults) {
+  searchResults.innerHTML = filteredResults.map(item =>
+      `<div class="srch-item" data-id="${item.id}">
+        <span>${item.name}</span>
+        <p>${item.artist}</p>
+      </div>
+      `
+  ).join('');
+}
+
+function clearResults() {
+  searchResults.innerHTML = '';
 }
 
 // ----- Event Listeners ------
@@ -617,17 +666,20 @@ playlistContainer.addEventListener('click', (event) => {
 });
 
 homeNavegation.addEventListener('click', () => {
+  currentInterface = 'main';
   removeActive('pst-item-side');
   !homeNavegation.classList.contains('active') && homeNavegation.classList.add('active');
   document.getElementById('home-window').style.display = 'flex';
   document.getElementById('playlist-window').style.display = 'none';
   document.getElementById('window-pos').innerHTML = 'Your Library';
+  songsToPlay = [];
+  loadInitialSongsArray();
 });
 
 // play playlist song
 document.getElementById('pst-song-list').addEventListener('dblclick', (event) => {
+  currentInterface = 'playlist'; // for inclue active className to the playlist ul none to the all user songs ul
   removeActive('userPlaylistItem');
-
   // Busca el <li> más cercano al elemento clicado
   const liElement = event.target.closest('li');
   liElement.classList.add('active');
@@ -637,4 +689,33 @@ document.getElementById('pst-song-list').addEventListener('dblclick', (event) =>
     const id = liElement.getAttribute('data-id'); // Obtener el ID desde el data-attribute
     playSongById(id);
   }
+});
+
+// Search bar
+
+searchBar.addEventListener('input', (event) => {
+  const query = event.target.value;
+  if (query.trim() === '') {
+      clearResults();
+  } else {
+      searchBarData(query);
+  }
+});
+
+searchBar.addEventListener('click', () => {
+  document.getElementById('srch-rstls').style.display = 'flex';
+  searchBarData();
+});
+
+searchResults.addEventListener('click', (event) => {
+  const id = event.target.getAttribute('data-id');
+  
+  if (!id) {
+    const div = event.target.closest('div').getAttribute('data-id');
+    playSongById(div);
+  } else {
+    playSongById(id);
+  }
+
+  document.getElementById('srch-rstls').style.display = 'none';
 });

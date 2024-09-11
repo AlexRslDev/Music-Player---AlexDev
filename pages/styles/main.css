@@ -1,6 +1,7 @@
 /* --- Grid main container --- */
 
 #app-container {
+  background: linear-gradient(to right top, #65dfc9, var(--main-color));
   background-color: var(--main-color);
   display: grid;
   height: 100vh;
@@ -20,6 +21,7 @@
   grid-template-rows: 0.2fr 1fr;
   grid-area: sidebar;
   background: var(--side-bar-gradient);
+  backdrop-filter: blur(2rem);
   padding: 23px 40px;;
 }
 
@@ -135,7 +137,11 @@
   grid-area: main; 
   padding: 0 40px;
   overflow: hidden auto;
-  background-color: #FFF;
+  background: linear-gradient(
+    to right bottom,
+    rgb(255, 255, 255),
+    rgba(255, 255, 255, 0.900)
+  );
 
   &::-webkit-scrollbar-thumb {background-color: var(--orochimaru);}
   &::-webkit-scrollbar {width: 14px;}
@@ -150,6 +156,7 @@
 }
 
 #place-app {
+  position: relative;
   gap:  63px;
 
   span {
@@ -183,7 +190,54 @@
     }
     &:focus {
       outline: none;
-      box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    }
+  }
+
+  #srch-rstls {
+    background-color: var(--main-color);
+    width: 390px;
+    max-height: 300px;
+    position: absolute;
+    top: 32px;
+    z-index: 999;
+    display: none;
+    flex-direction: column;
+    gap: 8px;
+    padding: 30px 0 16px 0;
+    border-radius: 0 0 12px 12px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    &::-webkit-scrollbar-thumb {
+      background-color: var(--orochimaru); 
+      border-radius: 4px;
+    }
+    &::-webkit-scrollbar {width: 14px;}
+    &::-webkit-scrollbar-track {background-color: transparent;}
+
+    .srch-item {
+      width: 100%;
+      min-height: 45px;
+      padding: 8px 25px;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      transition: all .1s ease;
+      
+      &, span {cursor: pointer;}
+      span {
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+      p {
+        color: var(--spanish-gray);
+        font-size: 14px;
+        font-family: var(--poppins);
+      }
+
+      &:hover {
+        background-color: white;
+      }
     }
   }
 }

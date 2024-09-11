@@ -5,6 +5,7 @@ export function removeActive(items) {
 // ELEMENTS LIKE 'Item' and the id in play by ID
 export function includeActive(elements, id) {
   document.querySelectorAll(`.${elements}`).forEach(element => {
+    console.log(element)
     const attribute = element.getAttribute('data-id');
     if (attribute === id) {
       element.classList.add('active');
