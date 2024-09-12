@@ -49,38 +49,4 @@ export async function getFavoriteSong() {
 
   //console.log(`Your favorite song: ${name} by: ${artist}`);
   //return { name, artist, plays, id };
-
-}
-
-/*
-// Uso de la función
-(async () => {
-  const { name, artist, plays, id } = await getFavoriteSong();
-
-  favoriteSongBtn.dataset.id = id;
-  favoriteName.innerHTML = name;
-  favoriteArtist.innerHTML = artist;
-  favoritePlays.innerHTML = plays + ' Plays';
-  favoriteImg.src = `assets/images/covers/${artist}.webp`
-})();
-*/
-/*
-// Ejemplo de funciones auxiliares para que el código sea funcional
-function getPlaysCount() {
-  // Función de ejemplo que retorna una lista de canciones
-  return [
-    { id: 1, plays: 30 },
-    { id: 2, plays: 50 },
-    { id: 3, plays: 20 }
-  ];
-}
-
-async function fetchSongs() {
-  // Función de ejemplo que retorna una lista de canciones
-  return [
-    { id: 1, name: 'Shape of You', artist: 'Ed Sheeran' },
-    { id: 2, name: 'Blinding Lights', artist: 'The Weeknd' },
-    { id: 3, name: 'Someone Like You', artist: 'Adele' }
-  ];
-}
-*/
+};
