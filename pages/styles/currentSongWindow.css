@@ -1,0 +1,49 @@
+#current-song-ctn {
+  display: none;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(107.542deg, #FFFFFF 0%, #fff1eb 26%, #ace0f9 75%);
+  grid-area: main;
+}
+
+#info-cover-ctn {
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 21px;
+
+  #current-wd-cover {
+    width: 250px;
+    height: 250px;
+    border-radius: 12px;
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 25%), 4px 4px 16px 0px rgba(0, 0, 0, 25%);
+  }
+  #txt-cws {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+
+    div {
+      width: 100%;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      text-align: center;
+    }
+    h1 {
+      color: #2E2527;
+      text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
+      cursor: default;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+    p {
+      font-family: var(--poppins);
+      font-size: 20px;
+    }
+  }
+}

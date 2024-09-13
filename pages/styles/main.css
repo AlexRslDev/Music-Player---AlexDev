@@ -559,7 +559,9 @@
 #song-playing {
   width: 14rem;
   gap: .6rem;
-  
+  border-radius: 8px;
+  transition: all .2s ease;
+
   img {
     width: 3rem;
     height: 3rem;
@@ -590,6 +592,7 @@
   &:active {
     transform: scale(1.1);
   }
+  &:hover, &.active {background-color: #F2F3F7;}
 }
 
 #control-player-btns {

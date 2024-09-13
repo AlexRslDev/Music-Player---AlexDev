@@ -124,6 +124,7 @@ function playSongById(id) {
 
         currentAudio.play()
           .then(() => {
+            currentAudio.volume = originalVolume;
             if (currentInterface === 'main') {
               removeActive('userSongItem');
               includeActive('userSongItem', id);
@@ -205,6 +206,7 @@ function getCurrentSong() {
     currentName = savedSong.savedName;
     currentArtist = savedSong.savedArtist;
     musicIndex = Number(savedSong.position);
+    updateCurrentWdContent(currentImg, currentName, currentArtist);
 
     // Update UI // i can reuse with playSongById
     playerImg.src = currentImg;
@@ -223,8 +225,17 @@ function updateCurrentSong() {
   savedSong.savedArtist = currentArtist;
   savedSong.currentTimeSong = String(currentTimeSong);
   savedSong.currentDurationSong = String(currentDurationSong);
+  updateCurrentWdContent(currentImg, currentName, currentArtist);
+
   // Save
   localStorage.setItem('currentSong', JSON.stringify(savedSong));
+};
+
+function updateCurrentWdContent(currentImg, currentName, currentArtist) {
+  // Update current song window
+  document.querySelector('#current-wd-cover').src = currentImg;
+  document.querySelector('#txt-ttl-cws').innerHTML = currentName;
+  document.querySelector('#txt-arts-cws').innerHTML = currentArtist;
 };
 
 export function loadPlaylists() {
@@ -327,7 +338,7 @@ function loadPlaylistContent (position) {
   
   // TOP: text content windows playlist
   document.getElementById('ctn-pst-ttle').innerHTML = thisPlaylist.title;
-  document.getElementById('ctn-pst-qtt').innerHTML = thisPlaylist.songs.length;
+  document.getElementById('ctn-pst-qtt').innerHTML = thisPlaylist.songs.length + ' Songs';
   if (thisPlaylist.img) {
     document.getElementById('ctn-pst-img').src = thisPlaylist.img;
   }
@@ -561,10 +572,11 @@ function handleAddButton() {
   };
 };
 
-function handleNavegationPaint(home, playlist, window) {
+function handleNavegationPaint(home, playlist, currentSong, window) {
   document.getElementById('home-window').style.display = home;
   document.getElementById('playlist-window').style.display = playlist;
   document.getElementById('window-pos').innerHTML = window;
+  document.querySelector('#current-song-ctn').style.display = currentSong;
 };
 
 
@@ -663,6 +675,7 @@ playlistContainer.addEventListener('click', (event) => {
   
   if (liElement && !liElement.classList.contains('remove')) {
     removeActive('pst-item-side');
+    document.querySelector('#song-playing').classList.remove('active');
     // Search position inside the array with playlists (localStorage)
     const pos = liElement.getAttribute('data-pos'); // Obtener el ID desde el data-attribute
     currentPlaylist = pos;
@@ -671,14 +684,15 @@ playlistContainer.addEventListener('click', (event) => {
     homeNavegation.classList.remove('active');
     liElement.classList.add('active');
 
-    handleNavegationPaint('none', 'block', 'Playlist');
+    handleNavegationPaint('none', 'block', 'none', 'Playlist');
   };
 });
 homeNavegation.addEventListener('click', () => {
   currentInterface = 'main';
   removeActive('pst-item-side');
+  document.querySelector('#song-playing').classList.remove('active');
   !homeNavegation.classList.contains('active') && homeNavegation.classList.add('active');
-  handleNavegationPaint('flex', 'none', 'Your Library');
+  handleNavegationPaint('flex', 'none', 'none', 'Your Library');
   songsToPlay = [];
   loadInitialSongsArray();
 });
@@ -743,4 +757,18 @@ document.getElementById('pst-song-list').addEventListener('click', (event) => {
     setStoredPlaylist(obj);
     loadPlaylistContent(Number(currentPlaylist));
   }
+});
+
+// Play playlist button
+document.querySelector('#play-pst').addEventListener('click', () => {
+  playSongById(songsToPlay[0]);
+  currentInterface = 'playlist';
+});
+
+// Current song window
+document.querySelector('#song-playing').addEventListener('click', () => {
+  removeActive('pst-item-side');
+  document.querySelector('#song-playing').classList.add('active');
+  homeNavegation.classList.remove('active');
+  handleNavegationPaint('none', 'none', 'flex', '');
 });
