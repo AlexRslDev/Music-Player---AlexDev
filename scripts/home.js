@@ -14,6 +14,8 @@ const userSongs = document.querySelector('.userSongs'),
   prevBtn = document.getElementById('prev'),
   nextBtn = document.getElementById('next'),
   playBtn = document.getElementById('play'),
+  volumeLineContainer = document.getElementById('vol-line-ctn'),
+  volumeLine = document.getElementById('vol-line'),
   favoriteSongBtn = document.getElementById('fv-song-btn'),
   createPlaylistBtn = document.getElementById('c-playlist'),
   playlistDialog = document.getElementById('playlist-dialog'),
@@ -22,7 +24,8 @@ const userSongs = document.querySelector('.userSongs'),
   playlistContainer = document.getElementById('user-playlists'),
   homeNavegation = document.querySelector('.home-nav'),
   searchBar = document.getElementById('srch-bar'),
-  searchResults = document.getElementById('srch-rstls');
+  searchResults = document.getElementById('srch-rstls'),
+  volumeIcon = document.querySelector('#vol-icon');
 
 // Player icon path
 const playIcon = 'assets/images/play-solid.svg',
@@ -41,7 +44,8 @@ let currentAudio,
   imageBase64,  // variable global que contiene la imagen en base 64
   currentInterface = 'main',
   currentPlaylist,
-  songsToPlay = [];
+  songsToPlay = [],
+  originalVolume = 1;
 
 // Load Favorite Component
 getFavoriteSong();
@@ -177,7 +181,6 @@ function updateProgressBar() {
 };
 
 function setProgressBar(e) {
-  console.log('user click player')
   const width = playerProgress.clientWidth;
   const clickX = e.offsetX;
   currentAudio.currentTime = (clickX / width) * currentAudio.duration;
@@ -421,7 +424,28 @@ function removePlaylist(position) {
   setStoredPlaylist(obj);
 };
 
+
 // --- Event Listers Functions ---
+function setVolume(event) {
+  if (currentAudio && volumeIcon.src.includes('assets/images/volume-up-line.svg')) {
+    // Obtén el ancho del contenedor
+    const ctnWidth = volumeLineContainer.offsetWidth;
+    
+    // Obtén la posición del clic dentro del contenedor
+    const clickX = event.offsetX;
+    
+    // Calcula el nuevo volumen basado en la posición del clic (0 a 1)
+    const newVolume = clickX / ctnWidth;
+    originalVolume = newVolume;
+
+    // Ajusta el volumen del audio
+    currentAudio.volume = newVolume;
+    
+    // Ajusta el ancho de la barra de volumen para reflejar el cambio
+    volumeLine.style.width = (newVolume * 100) + '%';
+  };
+};
+
 function handlePlayButton() {
   if (playBtn.src.includes('play-solid.svg')) {
     playBtn.src = pauseIcon; // Cambia a la imagen de pausa
@@ -551,6 +575,20 @@ playBtn.addEventListener('click', handlePlayButton);
 prevBtn.addEventListener('click', () => changeMusic(-1));
 nextBtn.addEventListener('click', () => changeMusic(1));
 playerProgress.addEventListener('click', setProgressBar);
+volumeLineContainer.addEventListener('click', setVolume);
+document.querySelector('#vol-icon').addEventListener('click', () => {
+  if (currentAudio) {
+    if (volumeIcon && volumeIcon.src.includes('assets/images/volume-up-line.svg')) {
+      volumeIcon.src = 'assets/images/volume-xmark-solid.svg';
+      currentAudio.volume = 0;
+      volumeLine.style.width = '0%';
+    } else {
+      volumeIcon.src = 'assets/images/volume-up-line.svg';
+      currentAudio.volume = originalVolume;
+      volumeLine.style.width = (originalVolume * 100) + '%';
+    };
+  };
+});
 
 // Play a User's Song
 userSongs.addEventListener('dblclick', (event) => {
@@ -669,6 +707,9 @@ searchResults.addEventListener('click', (event) => {
     playSongById(id);
   };
   document.getElementById('srch-rstls').style.display = 'none';
+});
+searchBar.addEventListener('blur', () => {
+  setTimeout(() => {document.getElementById('srch-rstls').style.display = 'none';}, 300);
 });
 
 // Right click on a playlist item
