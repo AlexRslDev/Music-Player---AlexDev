@@ -7,11 +7,21 @@
   <link rel="stylesheet" href="pages/styles/main.css">
   <link rel="stylesheet" href="pages/styles/playlists-window.css">
   <link rel="stylesheet" href="pages/styles/currentSongWindow.css">
+  <link rel="stylesheet" href="pages/styles/loader.css">
   <script type="module" src="scripts/home.js"></script>
   <title>Document</title>
 </head>
 <body>
-  
+  <div id="loader">
+    <div class="loading">
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+  </div>
+
   <div id="app-container">
 
     <div id="side-bar">
@@ -311,8 +321,8 @@
         <div id="song-playing">
           <img src="" id="p-img" alt="">
           <div>
-            <p id="player-title">N/A</p>
-            <span id="player-arts">N/A</span>
+            <p id="player-title"></p>
+            <span id="player-arts"></span>
           </div>
         </div>
 
@@ -326,7 +336,6 @@
  
         <div id="player-btns">
           <img src="assets/images/heart-regular.svg">
-          <img src="assets/images/plus-regular.svg">
           <img src="assets/images/volume-up-line.svg" id="vol-icon">
           <div id="vol-line-ctn">
             <div id="vol-line"></div>

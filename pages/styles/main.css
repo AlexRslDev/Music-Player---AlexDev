@@ -3,7 +3,7 @@
 #app-container {
   background: linear-gradient(to right top, #65dfc9, var(--main-color));
   background-color: var(--main-color);
-  display: grid;
+  display: none;
   height: 100vh;
   width: 100vw;
   grid-template-columns: 0.25fr 1fr;

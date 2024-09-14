@@ -47,6 +47,7 @@ let currentAudio,
   songsToPlay = [],
   originalVolume = 1;
 
+loader();
 // Load Favorite Component
 getFavoriteSong();
 // Load Current user's song
@@ -56,6 +57,13 @@ loadPlaylists();
 // Load songs id's array with all user songs
 loadInitialSongsArray();
 
+
+function loader() {
+  setTimeout(() => {
+    document.querySelector('#loader').style.display = 'none';
+    document.querySelector('#app-container').style.display = 'grid';
+  }, 2000);
+};
 
 // Include HTML user's songs on the container
 fetchSongs().then(songs => {
@@ -724,6 +732,7 @@ searchResults.addEventListener('click', (event) => {
 });
 searchBar.addEventListener('blur', () => {
   setTimeout(() => {document.getElementById('srch-rstls').style.display = 'none';}, 300);
+  searchBar.value = '';
 });
 
 // Right click on a playlist item
