@@ -45,7 +45,9 @@ let currentAudio,
   currentInterface = 'main',
   currentPlaylist,
   songsToPlay = [],
-  originalVolume = 1;
+  savedSongsToPlay = [],
+  originalVolume = 1,
+  isRepeating;
 
 loader();
 // Load Favorite Component
@@ -56,7 +58,6 @@ getCurrentSong();
 loadPlaylists();
 // Load songs id's array with all user songs
 loadInitialSongsArray();
-
 
 function loader() {
   setTimeout(() => {
@@ -125,7 +126,8 @@ function playSongById(id) {
       // Search the index position inside global songs array
       const indexPosition = songsToPlay.findIndex(element => element === id)
       musicIndex = indexPosition;
-      currentPosition = indexPosition;
+      console.log(musicIndex)
+      currentPosition = savedSongsToPlay.findIndex(element => element === id);
 
       if (song) {
         currentAudio = new Audio(song.path); // Crear un nuevo objeto Audio y asignarlo a currentAudio
@@ -164,10 +166,16 @@ function playSongById(id) {
             updateCurrentSong();
 
             currentAudio.addEventListener('ended', () => {
-              playBtn.src = playIcon;
-              changeMusic(1)
-              getFavoriteSong();
-              removeActive('userSongItem');
+              if (!isRepeating) {
+                playBtn.src = playIcon;
+                changeMusic(1)
+                getFavoriteSong();
+                removeActive('userSongItem');
+              } else {
+                playBtn.src = playIcon;
+                getFavoriteSong();
+                playSongById(id);
+              };
             });
           })
           .catch(error => {
@@ -354,6 +362,8 @@ function loadPlaylistContent (position) {
   // Load the ArrayIndex variable with the id's of playlist songs
   songsToPlay = [];
   thisPlaylist.songs.forEach(song => songsToPlay.push(song));
+  savedSongsToPlay = songsToPlay;
+  console.log(songsToPlay)
 
   // fetching songs
   fetchSongs().then(dataSongs => {
@@ -397,7 +407,9 @@ function loadPlaylistContent (position) {
 function loadInitialSongsArray() {
   fetchSongs().then(songs => {
     songs.forEach(song => songsToPlay.push(song.id));
+    loadMainStats();
   });
+  savedSongsToPlay = songsToPlay;
 };
 
 async function searchBarData(query) {
@@ -442,6 +454,11 @@ function removePlaylist(position) {
   obj.splice(position, 1);
   setStoredPlaylist(obj);
 };
+
+function loadMainStats() {
+  document.querySelector('#stat-tracks').innerHTML = songsToPlay.length;
+  //document.querySelector('#stat-likes')
+}
 
 
 // --- Event Listers Functions ---
@@ -587,6 +604,16 @@ function handleNavegationPaint(home, playlist, currentSong, window) {
   document.querySelector('#current-song-ctn').style.display = currentSong;
 };
 
+function shuffleArray(songsArr) {
+  for (let i = songsArr.length - 1; i > 0; i--) {
+    // Generar un índice aleatorio entre 0 y i
+    const j = Math.floor(Math.random() * (i + 1));
+    
+    // Intercambiar los elementos en las posiciones i y j
+    [songsArr[i], songsArr[j]] = [songsArr[j], songsArr[i]];
+  }
+  return songsArr;
+};
 
 // ----- | Event Listeners | ------
 
@@ -780,4 +807,29 @@ document.querySelector('#song-playing').addEventListener('click', () => {
   document.querySelector('#song-playing').classList.add('active');
   homeNavegation.classList.remove('active');
   handleNavegationPaint('none', 'none', 'flex', '');
+});
+
+// Random Button
+document.querySelector('#shuffle').addEventListener('click', (event)=> {
+  const parent = event.target.parentElement;
+  if (parent.classList.contains('active')) {
+    parent.classList.remove('active');
+    songsToPlay = savedSongsToPlay;
+  } else {
+    parent.classList.add('active');
+    const neww = shuffleArray(songsToPlay.slice()); // don't change the original Array.
+    songsToPlay = neww;
+  };
+});
+
+// Replay Button
+document.querySelector('#replay').addEventListener('click', (event)=> {
+  const parent = event.target.parentElement;
+  if (parent.classList.contains('active')) {
+    parent.classList.remove('active');
+    isRepeating = false;
+  } else {
+    parent.classList.add('active');
+    isRepeating = true;
+  };
 });

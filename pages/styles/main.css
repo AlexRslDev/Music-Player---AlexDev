@@ -76,11 +76,6 @@
 #playlist-options {
   justify-content: space-between;
   margin-bottom: 12px;
-
-  div {
-    display: flex;
-    gap: 8px;
-  }
   img {width: 15px;}
 }
 
@@ -262,7 +257,6 @@
 #right-main {
   gap: 12px;
 
-  img {cursor: pointer;}
   div {
     width: 31px;
     height: 31px;
@@ -271,7 +265,6 @@
     align-content: center;
     border-radius: 50%;
     background-color: #bcbcbc;
-    cursor: pointer;
   }
 }
 
@@ -369,19 +362,19 @@
   margin: 2rem 0 1.2rem 0;
   justify-content: space-between;
 
-  p {font-size: 14px;}
+  p {
+    margin-right: 35px;
+    font-size: 14px;
+  }
   span {
     font-size: 18px;
     font-weight: 500;
-  }
-  div {
-    gap: 10px;
-    img {width: 16px;}
   }
 }
 
 #songs-content {
   width: 100%;
+  margin-bottom: 30px;
 
   ul {
     display: flex;
@@ -476,10 +469,8 @@
 }
 
 #up-stats-home {
-  justify-content: space-between;
   margin-bottom: 1rem;
   span {font-weight: 500;}
-  p {font-size: 14px;}
 }
 
 #stats-itms {
@@ -608,6 +599,18 @@
   #play {
     height: 28px; 
     width: 28px;
+  }
+  .extras-btns-player {
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+    border-radius: 50%;
+    &.active {
+      border: 1.5px solid var(--raisin-black);
+    }
   }
 }
 
@@ -878,7 +881,7 @@
 /* Add song to playlist */
 .ellipsis-container {
   width: 200px;
-  height: 150px;
+  height: auto;
   display: none;
   position: absolute;
   padding: 8px 0 5px 0;

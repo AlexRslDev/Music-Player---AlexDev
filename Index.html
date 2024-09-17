@@ -43,10 +43,6 @@
               <p>Home</p>
             </li>
             <li>
-              <img src="assets/images/chart-solid-blue.svg" alt="">
-              <p>Statistics</p>
-            </li>
-            <li>
               <img src="assets/images/mic-solid-blue.svg" alt="">
               <p>Artists</p>
             </li>
@@ -65,10 +61,7 @@
 
         <div id="playlist-options" class="gray">
           <span class="non-view">Playlists</span>
-          <div>
-            <img src="assets/images/plus-solid.svg" id="c-playlist" alt="">
-            <img src="assets/images/bars-solid.svg" alt="">
-          </div>
+          <img src="assets/images/plus-solid.svg" id="c-playlist">
         </div>
         
         <dialog id="playlist-dialog">
@@ -177,10 +170,7 @@
 
             <div id="songs-control-home">
               <span>Your songs</span>
-              <div>
-                <p class="gray">Recents</p>
-                <img src="assets/images/bars-solid.svg" alt="">
-              </div>
+              <p class="gray">Recents</p>
             </div>
 
             <div id="songs-content">
@@ -227,14 +217,13 @@
             <div>
               <div id="up-stats-home">
                 <span>Statistics</span>
-                <p>Explore</p>
               </div>
               <ul id="stats-itms">
 
                 <li>
                   <div>
                     <p class="gray">Tracks</p>
-                    <span>548</span>
+                    <span id="stat-tracks"></span>
                   </div>
 
                   <div id="stats-music-circle-out">
@@ -248,7 +237,7 @@
                 <li>
                   <div>
                     <p class="gray">Likes</p>
-                    <span>109</span>
+                    <span id="stat-likes">N/A</span>
                   </div>
 
                   <div id="stats-music-circle-out">
@@ -284,7 +273,6 @@
 
             <div id="oder-by-pst">
               <p class="gray">Recets</p>
-              <img src="assets/images/bars-solid.svg">
             </div>
           </div>
 
@@ -327,11 +315,15 @@
         </div>
 
         <div id="control-player-btns">
-          <img src="assets/images/shuffle-solid.svg" height="20px" alt="">
-          <img src="assets/images/backward-solid.svg" height="20px" id="prev" alt="">
-          <img src="assets/images/play-solid.svg" height="28px" id="play" alt="">
-          <img src="assets/images/forward-solid.svg" height="20px" id="next" alt="">
-          <img src="assets/images/repeat-solid.svg" height="20px" alt="">
+          <div class="extras-btns-player">
+            <img src="assets/images/shuffle-solid.svg" height="20px" id="shuffle">
+          </div>
+          <img src="assets/images/backward-solid.svg" height="20px" id="prev">
+          <img src="assets/images/play-solid.svg" height="28px" id="play">
+          <img src="assets/images/forward-solid.svg" height="20px" id="next">
+          <div class="extras-btns-player">
+            <img src="assets/images/repeat-solid.svg" height="20px" id="replay">
+          </div>
         </div>
  
         <div id="player-btns">
