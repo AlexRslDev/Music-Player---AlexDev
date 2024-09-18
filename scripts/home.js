@@ -60,6 +60,7 @@ getCurrentSong();
 loadPlaylists();
 // Load songs id's array with all user songs
 loadInitialSongsArray();
+loadUserSongsHTML();
 
 function loader() {
   setTimeout(() => {
@@ -69,48 +70,51 @@ function loader() {
 };
 
 // Include HTML user's songs on the container
-fetchSongs().then(songs => {
-  const fragment = document.createDocumentFragment();
-
-  songs.forEach(song => {
-    const songHTML = `
-      <li data-id="${song.id}" id="userSong" class="userSongItem">
-        <div id="left-song-item">
-          <img src="assets/images/covers/${song.cover}" alt="">
-          <div>
-            <span>${song.name}</span>
-            <p class="gray">${song.artist}</p>
+export function loadUserSongsHTML() {
+  userSongs.innerHTML = '';
+  fetchSongs().then(songs => {
+    const fragment = document.createDocumentFragment();
+  
+    songs.forEach(song => {
+      const songHTML = `
+        <li data-id="${song.id}" id="userSong" class="userSongItem">
+          <div id="left-song-item">
+            <img src="assets/images/covers/${song.cover}" alt="">
+            <div>
+              <span>${song.name}</span>
+              <p class="gray">${song.artist}</p>
+            </div>
           </div>
-        </div>
-
-        <div id="right-song-item">
-          <img src="${checkItem(song.id)}" class="like-regular">
-          <div class="home-duration ">
-            <p class="gray">${song.duration}</p>
-            <img src="assets/images/plus-solid.svg" class="ellipsis-btn">
+  
+          <div id="right-song-item">
+            <img src="${checkItem(song.id)}" class="like-regular">
+            <div class="home-duration ">
+              <p class="gray">${song.duration}</p>
+              <img src="assets/images/plus-solid.svg" class="ellipsis-btn">
+            </div>
           </div>
-        </div>
-
-        <div class="ellipsis-container">
-          <div id="top-elip">
-            <img src="assets/images/xmark-solid-gray.svg" class="close-elip">
-            <p>Add to playlist</p>
+  
+          <div class="ellipsis-container">
+            <div id="top-elip">
+              <img src="assets/images/xmark-solid-gray.svg" class="close-elip">
+              <p>Add to playlist</p>
+            </div>
+            <div class="select-pst"></div>
           </div>
-          <div class="select-pst"></div>
-        </div>
-      </li>
-    `;
-
-    // Crear un contenedor temporal para el HTML
-    const tempDiv = document.createElement('div');
-    tempDiv.innerHTML = songHTML;
-
-    // Agregar el primer hijo del contenedor temporal al fragment
-    fragment.appendChild(tempDiv.firstElementChild);
+        </li>
+      `;
+  
+      // Crear un contenedor temporal para el HTML
+      const tempDiv = document.createElement('div');
+      tempDiv.innerHTML = songHTML;
+  
+      // Agregar el primer hijo del contenedor temporal al fragment
+      fragment.appendChild(tempDiv.firstElementChild);
+    });
+  
+    userSongs.appendChild(fragment);
   });
-
-  userSongs.appendChild(fragment);
-});
+};
 
 // Play music by ID
 function playSongById(id) {
@@ -397,7 +401,7 @@ function loadPlaylistContent (position) {
             </div>
       
             <div id="rght-sng-pst-itm">
-              <img src="assets/images/heart-regular.svg" class="like-regular">
+              <img src="${checkItem(dataSong.id)}" class="like-regular">
               <div class="pst-duration ">
                 <p class="gray">${dataSong.duration}</p>
                 <img src="assets/images/xmark-solid-gray.svg" class="rm-sg-fpst">

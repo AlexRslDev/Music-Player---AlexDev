@@ -1,4 +1,4 @@
-import { loadLikeCurrentSong } from '../scripts/home.js'
+import { loadLikeCurrentSong, loadUserSongsHTML } from '../scripts/home.js'
 
 const userSongs = document.querySelector('.userSongs'),
   heartRegular = 'assets/images/heart-regular.svg',
@@ -66,5 +66,11 @@ document.querySelectorAll('.like-regular').forEach(heart => heart.addEventListen
 userSongs.addEventListener('click', (event) => {
   if (event.target.classList.contains('like-regular')) {
     paintSongFavoriteState(event);
+  };
+});
+document.getElementById('pst-song-list').addEventListener('click', (event) => {
+  if (event.target.classList.contains('like-regular')) {
+    paintSongFavoriteState(event);
+    loadUserSongsHTML();
   };
 });
