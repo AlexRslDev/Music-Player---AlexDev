@@ -1,5 +1,6 @@
 import { fetchSongs } from '../modules/fetching.js';
 import { getPlaysCount, updatePlayCount } from '../modules/playsCounter.js';
+import { checkItem } from '../modules/favoriteSongs.js';
 import { getFavoriteSong } from '../modules/favoriteSong.js';
 import { removeActive, includeActive } from '../utils/removeActive.js';
 import { getStoredPlaylist, setStoredPlaylist } from '../utils/storedPlaylist.js';
@@ -33,6 +34,7 @@ const playIcon = 'assets/images/play-solid.svg',
 
 // Currents variables
 let currentAudio,
+  currentID,
   currentPosition,
   currentImg,
   currentName,
@@ -82,7 +84,7 @@ fetchSongs().then(songs => {
         </div>
 
         <div id="right-song-item">
-          <img src="assets/images/heart-regular.svg">
+          <img src="${checkItem(song.id)}" class="like-regular">
           <div class="home-duration ">
             <p class="gray">${song.duration}</p>
             <img src="assets/images/plus-solid.svg" class="ellipsis-btn">
@@ -126,8 +128,11 @@ function playSongById(id) {
       // Search the index position inside global songs array
       const indexPosition = songsToPlay.findIndex(element => element === id)
       musicIndex = indexPosition;
-      console.log(musicIndex)
       currentPosition = savedSongsToPlay.findIndex(element => element === id);
+      currentID = id;
+      const currentSongLiked = document.querySelector('#crrt-sg-fv');
+      currentSongLiked.setAttribute('data-id', `${id}`);
+      loadLikeCurrentSong();
 
       if (song) {
         currentAudio = new Audio(song.path); // Crear un nuevo objeto Audio y asignarlo a currentAudio
@@ -215,6 +220,7 @@ function getCurrentSong() {
 
   if (savedSong.savedName) {
     // Set variables
+    const currentSongLiked = document.querySelector('#crrt-sg-fv');
     currentPosition = Number(savedSong.position);
     currentTimeSong = Number(savedSong.currentTimeSong);
     currentDurationSong = Number(savedSong.currentDurationSong);
@@ -222,6 +228,7 @@ function getCurrentSong() {
     currentName = savedSong.savedName;
     currentArtist = savedSong.savedArtist;
     musicIndex = Number(savedSong.position);
+    currentSongLiked.setAttribute('data-id', `${savedSong.id}`);
     updateCurrentWdContent(currentImg, currentName, currentArtist);
 
     // Update UI // i can reuse with playSongById
@@ -229,12 +236,19 @@ function getCurrentSong() {
     playerTitle.innerHTML = currentName;
     playerArtist.innerHTML = currentArtist;
     progress.style.width = `${(currentTimeSong / currentDurationSong) * 100}%`;
+    loadLikeCurrentSong();
   };
+};
+
+export function loadLikeCurrentSong() {
+  const currentSongLiked = document.querySelector('#crrt-sg-fv');
+  currentSongLiked.src = checkItem(currentSongLiked.getAttribute('data-id'));
 };
 
 function updateCurrentSong() {
   let savedSong = JSON.parse(localStorage.getItem('currentSong')) || {};
 
+  savedSong.id = currentID;
   savedSong.position = String(currentPosition);
   savedSong.savedImg = currentImg;
   savedSong.savedName = currentName;
@@ -383,7 +397,7 @@ function loadPlaylistContent (position) {
             </div>
       
             <div id="rght-sng-pst-itm">
-              <img src="assets/images/heart-regular.svg">
+              <img src="assets/images/heart-regular.svg" class="like-regular">
               <div class="pst-duration ">
                 <p class="gray">${dataSong.duration}</p>
                 <img src="assets/images/xmark-solid-gray.svg" class="rm-sg-fpst">
