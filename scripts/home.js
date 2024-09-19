@@ -4,6 +4,7 @@ import { checkItem } from '../modules/favoriteSongs.js';
 import { getFavoriteSong } from '../modules/favoriteSong.js';
 import { removeActive, includeActive } from '../utils/removeActive.js';
 import { getStoredPlaylist, setStoredPlaylist } from '../utils/storedPlaylist.js';
+import { getFavoritesSongs } from '../modules/favoriteSongs.js';
 
 // ELEMENTS
 const userSongs = document.querySelector('.userSongs'),
@@ -24,6 +25,8 @@ const userSongs = document.querySelector('.userSongs'),
   coverPlaylist = document.getElementById('pst-file'),
   playlistContainer = document.getElementById('user-playlists'),
   homeNavegation = document.querySelector('.home-nav'),
+  artistsNavegation = document.querySelector('.artists-nav'),
+  favoritesNavegation = document.querySelector('.favorites-nav'),
   searchBar = document.getElementById('srch-bar'),
   searchResults = document.getElementById('srch-rstls'),
   volumeIcon = document.querySelector('#vol-icon');
@@ -51,6 +54,8 @@ let currentAudio,
   originalVolume = 1,
   isRepeating;
 
+export let isInPlaylist = false;
+
 loader();
 // Load Favorite Component
 getFavoriteSong();
@@ -70,7 +75,7 @@ function loader() {
 };
 
 // Include HTML user's songs on the container
-export function loadUserSongsHTML() {
+function loadUserSongsHTML() {
   userSongs.innerHTML = '';
   fetchSongs().then(songs => {
     const fragment = document.createDocumentFragment();
@@ -362,7 +367,7 @@ function songToPlaylist(id, playlist) {
   };
 };
 
-function loadPlaylistContent (position) {
+function loadPlaylistContent(position) {
   // Reset some values
   document.getElementById('pst-song-list').innerHTML = '';
   document.getElementById('ctn-pst-img').src = 'assets/images/default-icon.webp';
@@ -381,7 +386,6 @@ function loadPlaylistContent (position) {
   songsToPlay = [];
   thisPlaylist.songs.forEach(song => songsToPlay.push(song));
   savedSongsToPlay = songsToPlay;
-  console.log(songsToPlay)
 
   // fetching songs
   fetchSongs().then(dataSongs => {
@@ -473,9 +477,9 @@ function removePlaylist(position) {
   setStoredPlaylist(obj);
 };
 
-function loadMainStats() {
+export function loadMainStats() {
   document.querySelector('#stat-tracks').innerHTML = songsToPlay.length;
-  //document.querySelector('#stat-likes')
+  document.querySelector('#stat-likes').innerHTML = getFavoritesSongs().length;
 }
 
 
@@ -615,11 +619,13 @@ function handleAddButton() {
   };
 };
 
-function handleNavegationPaint(home, playlist, currentSong, window) {
+function handleNavegationPaint(home, playlist, currentSong, artists, favorites, window) {
   document.getElementById('home-window').style.display = home;
   document.getElementById('playlist-window').style.display = playlist;
-  document.getElementById('window-pos').innerHTML = window;
   document.querySelector('#current-song-ctn').style.display = currentSong;
+  document.querySelector('#artists-window').style.display = artists;
+  document.querySelector('#favorites-window').style.display = favorites;
+  document.getElementById('window-pos').innerHTML = window;
 };
 
 function shuffleArray(songsArr) {
@@ -631,6 +637,81 @@ function shuffleArray(songsArr) {
     [songsArr[i], songsArr[j]] = [songsArr[j], songsArr[i]];
   }
   return songsArr;
+};
+
+async function loadArtistsContent() {
+  try {
+    const response = await fetch('../data/songs.json');
+    const data = await response.json();
+    const fragment = document.createDocumentFragment();
+
+    data.forEach(item => {
+      const html = `
+        <div id="itm-ats">
+          <img src="assets/images/covers/${item.cover}">
+          <p>${item.artist}</p>
+        </div>
+      `;
+  
+      const tempDiv = document.createElement('div');
+      tempDiv.innerHTML = html;
+  
+      fragment.appendChild(tempDiv.firstElementChild);
+    });
+
+    document.querySelector('#ats-ctn').appendChild(fragment);
+  } catch (error) {
+      console.error('Error loading content:', error);
+  }
+};
+
+async function loadFavoriteSongs() {
+  try {
+    const response = await fetch('../data/songs.json');
+    const data = await response.json();
+    const OBJ = getFavoritesSongs();
+    const songsContainer = document.querySelector('#fv-songs-ctn');
+
+    if (OBJ && data && OBJ.length > -1) {
+      songsToPlay = [];
+      songsContainer.innerHTML = '';
+      OBJ.forEach(song => songsToPlay.push(song));
+      savedSongsToPlay = songsToPlay;
+      const fragment = document.createDocumentFragment();
+
+      // Show by ID
+      data.forEach(song => {
+        if (OBJ.some(item => item === song.id)) {
+          const html = `
+            <li id="userSongFavorite" class="userFavoriteItem" data-id="${song.id}">
+              <div id="lft-sng-fv-itm">
+                <img src="assets/images/covers/${song.cover}">
+                <div>
+                  <span>${song.name}</span>
+                  <p class="gray">${song.artist}</p>
+                </div>
+              </div>
+        
+              <div id="rght-sng-fv-itm">
+                <img src="assets/images/heart-solid-liked.svg">
+                <div class="fv-duration">
+                  <p class="gray">${song.duration}</p>
+                </div>
+              </div>
+            </li>
+          `;
+
+          const tempDiv = document.createElement('div');
+          tempDiv.innerHTML = html;
+
+          fragment.appendChild(tempDiv.firstElementChild);
+        };
+      });  
+      songsContainer.appendChild(fragment);
+    }
+  } catch(error) {
+    console.error('Error loading content:', error);
+  };
 };
 
 // ----- | Event Listeners | ------
@@ -727,8 +808,11 @@ playlistContainer.addEventListener('click', (event) => {
   const liElement = event.target.closest('li');
   
   if (liElement && !liElement.classList.contains('remove')) {
+    isInPlaylist = true;
     removeActive('pst-item-side');
     document.querySelector('#song-playing').classList.remove('active');
+    artistsNavegation.classList.remove('active');
+    favoritesNavegation.classList.remove('active');
     // Search position inside the array with playlists (localStorage)
     const pos = liElement.getAttribute('data-pos'); // Obtener el ID desde el data-attribute
     currentPlaylist = pos;
@@ -737,17 +821,51 @@ playlistContainer.addEventListener('click', (event) => {
     homeNavegation.classList.remove('active');
     liElement.classList.add('active');
 
-    handleNavegationPaint('none', 'block', 'none', 'Playlist');
+    handleNavegationPaint('none', 'block', 'none', 'none', 'none', 'Playlist');
   };
 });
 homeNavegation.addEventListener('click', () => {
   currentInterface = 'main';
   removeActive('pst-item-side');
   document.querySelector('#song-playing').classList.remove('active');
+  artistsNavegation.classList.remove('active');
+  favoritesNavegation.classList.remove('active');
   !homeNavegation.classList.contains('active') && homeNavegation.classList.add('active');
-  handleNavegationPaint('flex', 'none', 'none', 'Your Library');
+  handleNavegationPaint('flex', 'none', 'none', 'none', 'none', 'Your Library');
   songsToPlay = [];
   loadInitialSongsArray();
+  loadUserSongsHTML();
+});
+document.querySelector('#song-playing').addEventListener('click', () => {
+  removeActive('pst-item-side');
+  document.querySelector('#song-playing').classList.add('active');
+  homeNavegation.classList.remove('active');
+  artistsNavegation.classList.remove('active');
+  favoritesNavegation.classList.remove('active');
+  handleNavegationPaint('none', 'none', 'flex', 'none', 'none', '');
+});
+artistsNavegation.addEventListener('click', () => {
+  currentInterface = 'artists';
+  removeActive('pst-item-side');
+  homeNavegation.classList.remove('active');
+  playlistContainer.classList.remove('active');
+  favoritesNavegation.classList.remove('active');
+  document.querySelector('#song-playing').classList.remove('active');
+  !artistsNavegation.classList.contains('active') && artistsNavegation.classList.add('active');
+  handleNavegationPaint('none', 'none', 'none', 'block', 'none', 'Artists');
+  loadArtistsContent();
+});
+favoritesNavegation.addEventListener('click', () => {
+  currentInterface = 'favorites';
+  removeActive('pst-item-side');
+  homeNavegation.classList.remove('active');
+  playlistContainer.classList.remove('active');
+  document.querySelector('#song-playing').classList.remove('active');
+  artistsNavegation.classList.remove('active');
+  !favoritesNavegation.classList.contains('active') && favoritesNavegation.classList.add('active');
+  handleNavegationPaint('none', 'none', 'none', 'none', 'block', 'Favorites');
+  document.querySelector('#fv-sgs-count').innerHTML = `${getFavoritesSongs().length} Songs`;
+  loadFavoriteSongs();
 });
 
 
@@ -817,14 +935,6 @@ document.getElementById('pst-song-list').addEventListener('click', (event) => {
 document.querySelector('#play-pst').addEventListener('click', () => {
   playSongById(songsToPlay[0]);
   currentInterface = 'playlist';
-});
-
-// Current song window
-document.querySelector('#song-playing').addEventListener('click', () => {
-  removeActive('pst-item-side');
-  document.querySelector('#song-playing').classList.add('active');
-  homeNavegation.classList.remove('active');
-  handleNavegationPaint('none', 'none', 'flex', '');
 });
 
 // Random Button

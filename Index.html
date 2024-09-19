@@ -8,6 +8,8 @@
   <link rel="stylesheet" href="pages/styles/playlists-window.css">
   <link rel="stylesheet" href="pages/styles/currentSongWindow.css">
   <link rel="stylesheet" href="pages/styles/loader.css">
+  <link rel="stylesheet" href="pages/styles/artistsWindow.css">
+  <link rel="stylesheet" href="pages/styles/favoritesWindow.css">
   <script type="module" src="scripts/home.js"></script>
   <script type="module" src="modules/favoriteSongs.js"></script>
   <title>Document</title>
@@ -43,11 +45,11 @@
               <img src="assets/images/house-solid.svg" alt="">
               <p>Home</p>
             </li>
-            <li>
+            <li class="artists-nav">
               <img src="assets/images/mic-solid-blue.svg" alt="">
               <p>Artists</p>
             </li>
-            <li>
+            <li class="favorites-nav">
               <img src="assets/images/heart-solid-blue.svg" alt="">
               <p>Favorites</p>
             </li>
@@ -238,7 +240,7 @@
                 <li>
                   <div>
                     <p class="gray">Likes</p>
-                    <span id="stat-likes">N/A</span>
+                    <span id="stat-likes"></span>
                   </div>
 
                   <div id="stats-music-circle-out">
@@ -282,7 +284,31 @@
           </div>
 
         </div>
+        
+        <div id="artists-window">
+          <div id="top-artist">
+            <span>Artists</span>
+            <p>Name</p>
+          </div>
 
+          <div id="ats-ctn"></div>
+        </div>
+        
+        <div id="favorites-window">
+          <div id="top-favorites">
+            <div id="lft-top-fv">
+              <div>
+                <img src="assets/images/circle-play-solid-blue.svg">
+                <span>Your Favorite Songs</span>
+              </div>
+              <p id="fv-sgs-count"></p>
+            </div>
+            <p>Recents</p>
+          </div>
+
+          <ul id="fv-songs-ctn"></ul>
+        </div>
+        
       </div>
 
     </main>

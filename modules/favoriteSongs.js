@@ -1,12 +1,12 @@
-import { loadLikeCurrentSong, loadUserSongsHTML } from '../scripts/home.js'
+import { loadLikeCurrentSong, loadMainStats, isInPlaylist } from '../scripts/home.js'
 
 const userSongs = document.querySelector('.userSongs'),
+  playlistSongs = document.getElementById('pst-song-list'),
   heartRegular = 'assets/images/heart-regular.svg',
   heartSolid = 'assets/images/heart-solid-liked.svg';
 
 loadInitialArr();
 const globalOBJ = getFavoritesSongs();
-//console.log(globalOBJ)
 
 function loadInitialArr() {
   const init = getFavoritesSongs();
@@ -16,7 +16,7 @@ function loadInitialArr() {
   // Set an empty array if key doesn'y exist.
 };
 
-function getFavoritesSongs() {
+export function getFavoritesSongs() {
   const obj = JSON.parse(localStorage.getItem('favoriteSongs'));
   return obj;
 };
@@ -52,6 +52,8 @@ function paintSongFavoriteState(event) {
     setFavoritesSongs(ID);
     loadLikeCurrentSong();
   };
+
+  loadMainStats();
 };
 
 export function checkItem(ID) {
@@ -62,13 +64,44 @@ export function checkItem(ID) {
   };
 };
 
-document.querySelectorAll('.like-regular').forEach(heart => heart.addEventListener('click', paintSongFavoriteState));
+function paintCurrentSongComponent(event, songsContainer) {
+  const ID = event.target.getAttribute('data-id');
+
+  const matchLi = Array.from(songsContainer.getElementsByTagName('li')).filter(li => li.getAttribute('data-id') === ID);
+  const element = matchLi[0];
+  const htmlCollection = element.getElementsByTagName('img');
+  let imgToRender;
+
+  Array.from(htmlCollection).forEach(img => {
+    if (img.classList.contains('like-regular')) {
+      imgToRender = img;
+    }
+  });
+
+  if (imgToRender) {
+    if (imgToRender.src.includes('heart-regular.svg')) {
+      imgToRender.src = heartSolid;
+    } else {
+      imgToRender.src = heartRegular;
+    };
+  };
+};
+
+document.querySelector('#crrt-sg-fv').addEventListener('click', (event) => {
+  paintSongFavoriteState(event);
+
+  if (isInPlaylist) {
+    paintCurrentSongComponent(event, playlistSongs);
+  } else {
+    paintCurrentSongComponent(event, userSongs);
+  };
+});
 userSongs.addEventListener('click', (event) => {
   if (event.target.classList.contains('like-regular')) {
     paintSongFavoriteState(event);
   };
 });
-document.getElementById('pst-song-list').addEventListener('click', (event) => {
+playlistSongs.addEventListener('click', (event) => {
   if (event.target.classList.contains('like-regular')) {
     paintSongFavoriteState(event);
     loadUserSongsHTML();

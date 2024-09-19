@@ -509,17 +509,25 @@
   }
 }
 
+/* --------- INTERFACES ------ */
 
 /* --------- Playlist Window ------ */
-
 #playlist-window {
   display: none;
 }
 
+/* --------- Artists Window ------ */
+#artists-window {
+  display: none;
+}
+
+/* --------- Favorites Window ------ */
+#favorites-window {
+  display: none;
+}
 
 
 /* --- Player --- */
-
 #player-container { 
   grid-area: player;
   background-color: #FFF;
