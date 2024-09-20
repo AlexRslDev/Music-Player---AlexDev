@@ -1,7 +1,9 @@
-import { fetchSongs } from '../modules/fetching.js';
+import { globalDATA } from '../modules/globalData.js';
+import { loadContent } from '../modules/loadContent.js';
 import { getPlaysCount, updatePlayCount } from '../modules/playsCounter.js';
+import { userSongsTemplate, artistTemplate, playlistContentTemplate, mainTopArtistsTemplate } from '../modules/templates.js';
 import { checkItem } from '../modules/favoriteSongs.js';
-import { getFavoriteSong } from '../modules/favoriteSong.js';
+import { getFavoriteSong } from '../modules/favoriteSongComponent.js';
 import { removeActive, includeActive } from '../utils/removeActive.js';
 import { getStoredPlaylist, setStoredPlaylist } from '../utils/storedPlaylist.js';
 import { getFavoritesSongs } from '../modules/favoriteSongs.js';
@@ -66,6 +68,7 @@ loadPlaylists();
 // Load songs id's array with all user songs
 loadInitialSongsArray();
 loadUserSongsHTML();
+loadMainTopArtists();
 
 function loader() {
   setTimeout(() => {
@@ -75,131 +78,89 @@ function loader() {
 };
 
 // Include HTML user's songs on the container
-function loadUserSongsHTML() {
-  userSongs.innerHTML = '';
-  fetchSongs().then(songs => {
-    const fragment = document.createDocumentFragment();
-  
-    songs.forEach(song => {
-      const songHTML = `
-        <li data-id="${song.id}" id="userSong" class="userSongItem">
-          <div id="left-song-item">
-            <img src="assets/images/covers/${song.cover}" alt="">
-            <div>
-              <span>${song.name}</span>
-              <p class="gray">${song.artist}</p>
-            </div>
-          </div>
-  
-          <div id="right-song-item">
-            <img src="${checkItem(song.id)}" class="like-regular">
-            <div class="home-duration ">
-              <p class="gray">${song.duration}</p>
-              <img src="assets/images/plus-solid.svg" class="ellipsis-btn">
-            </div>
-          </div>
-  
-          <div class="ellipsis-container">
-            <div id="top-elip">
-              <img src="assets/images/xmark-solid-gray.svg" class="close-elip">
-              <p>Add to playlist</p>
-            </div>
-            <div class="select-pst"></div>
-          </div>
-        </li>
-      `;
-  
-      // Crear un contenedor temporal para el HTML
-      const tempDiv = document.createElement('div');
-      tempDiv.innerHTML = songHTML;
-  
-      // Agregar el primer hijo del contenedor temporal al fragment
-      fragment.appendChild(tempDiv.firstElementChild);
-    });
-  
-    userSongs.appendChild(fragment);
-  });
+async function loadUserSongsHTML() {
+  await loadContent(globalDATA, '.userSongs', userSongsTemplate);
 };
 
 // Play music by ID
 function playSongById(id) {
-  fetchSongs()
-    .then(songs => {
-      // Stop song if another song is playing
-      if (currentAudio) {
-        currentAudio.pause();
-        currentAudio.currentTime = 0; // Reiniciar el tiempo para que comience desde el inicio si se vuelve a reproducir
-      };
+  // Stop song if another song is playing
+  if (currentAudio) {
+    currentAudio.pause();
+    currentAudio.currentTime = 0; // Reiniciar el tiempo para que comience desde el inicio si se vuelve a reproducir
+  };
 
-      // Buscar la canción por ID en el array de canciones
-      const song = songs.find(song => song.id === id);
+  // Search for song by ID in song array.
+  const song = globalDATA.find(song => song.id === id);
 
-      // Search the index position inside global songs array
-      const indexPosition = songsToPlay.findIndex(element => element === id)
-      musicIndex = indexPosition;
-      currentPosition = savedSongsToPlay.findIndex(element => element === id);
-      currentID = id;
-      const currentSongLiked = document.querySelector('#crrt-sg-fv');
-      currentSongLiked.setAttribute('data-id', `${id}`);
-      loadLikeCurrentSong();
+  // Search the index inside global songs array
+  const indexPosition = songsToPlay.findIndex(element => element === id)
+  musicIndex = indexPosition;
 
-      if (song) {
-        currentAudio = new Audio(song.path); // Crear un nuevo objeto Audio y asignarlo a currentAudio
+  currentPosition = savedSongsToPlay.findIndex(element => element === id);
+  currentID = id;
+  const currentSongLiked = document.querySelector('#crrt-sg-fv');
+  currentSongLiked.setAttribute('data-id', `${id}`);
+  loadLikeCurrentSong();
 
-        currentAudio.play()
-          .then(() => {
-            currentAudio.volume = originalVolume;
-            if (currentInterface === 'main') {
-              removeActive('userSongItem');
-              includeActive('userSongItem', id);
-            } else {
-              removeActive('userPlaylistItem');
-              includeActive('userPlaylistItem', id);
-            };
-            
-            // guardar los datos de la cancion actual para el localStorage
-            currentImg = `assets/images/covers/${song.cover}`;
-            currentName = song.name;
-            currentArtist = song.artist;
+  if (song) {
+    currentAudio = new Audio(song.path); // Crear un nuevo objeto Audio y asignarlo a currentAudio
 
-            // Cambiar los datos del player cuando se reproduce una nueva cancion
-            playerImg.src = currentImg;
-            playerTitle.innerHTML = currentName;
-            playerArtist.innerHTML = currentArtist;
+    currentAudio.play()
+      .then(() => {
+        currentAudio.volume = originalVolume;
+        if (currentInterface === 'main') {
+          removeActive('userSongItem');
+          includeActive('userSongItem', id);
+        } else {
+          removeActive('userPlaylistItem');
+          includeActive('userPlaylistItem', id);
+        };
+        
+        // guardar los datos de la cancion actual para el localStorage
+        currentImg = `assets/images/covers/${song.cover}`;
+        currentName = song.name;
+        currentArtist = song.artist;
 
-            // Actualizarla barra del player
-            currentAudio.addEventListener('timeupdate', updateProgressBar);
+        // Cambiar los datos del player cuando se reproduce una nueva cancion
+        playerImg.src = currentImg;
+        playerTitle.innerHTML = currentName;
+        playerArtist.innerHTML = currentArtist;
 
-            // Cambiar el icono del player
-            playBtn.src = pauseIcon; // Cambia a la imagen de pausa
+        loadMainTopArtists();
 
-            // Song counter
-            updatePlayCount(song.id);
+        // Actualizarla barra del player
+        currentAudio.addEventListener('timeupdate', updateProgressBar);
 
-            // actualizar los datos de la cancion actual
-            updateCurrentSong();
+        // Cambiar el icono del player
+        playBtn.src = pauseIcon; // Cambia a la imagen de pausa
 
-            currentAudio.addEventListener('ended', () => {
-              if (!isRepeating) {
-                playBtn.src = playIcon;
-                changeMusic(1)
-                getFavoriteSong();
-                removeActive('userSongItem');
-              } else {
-                playBtn.src = playIcon;
-                getFavoriteSong();
-                playSongById(id);
-              };
-            });
-          })
-          .catch(error => {
-            console.error('Error trying to play song:', error);
-            return;
-          });
-      } else {
-        console.error('Canción no encontrada:', id);
-      };
-    });
+        // Song counter
+        updatePlayCount(song.id);
+
+        // actualizar los datos de la cancion actual
+        updateCurrentSong();
+
+        currentAudio.addEventListener('ended', () => {
+          if (!isRepeating) {
+            playBtn.src = playIcon;
+            changeMusic(1)
+            getFavoriteSong();
+            removeActive('userSongItem');
+          } else {
+            playBtn.src = playIcon;
+            getFavoriteSong();
+            playSongById(id);
+          };
+        });
+      })
+      .catch(error => {
+        console.error('Error trying to play song:', error);
+        return;
+      });
+  } else {
+    console.error('Canción no encontrada:', id);
+  };
 };
 
 function updateProgressBar() {
@@ -367,7 +328,7 @@ function songToPlaylist(id, playlist) {
   };
 };
 
-function loadPlaylistContent(position) {
+async function loadPlaylistContent(position) {
   // Reset some values
   document.getElementById('pst-song-list').innerHTML = '';
   document.getElementById('ctn-pst-img').src = 'assets/images/default-icon.webp';
@@ -387,66 +348,27 @@ function loadPlaylistContent(position) {
   thisPlaylist.songs.forEach(song => songsToPlay.push(song));
   savedSongsToPlay = songsToPlay;
 
-  // fetching songs
-  fetchSongs().then(dataSongs => {
-    const fragment = document.createDocumentFragment();
+  // Filter the songs that are in the playlist
+  const songsInPlaylist = globalDATA.filter(dataSong =>
+    thisPlaylist.songs.includes(dataSong.id)
+  );
 
-    dataSongs.forEach(dataSong => {
-      // Verificar que dataSong tiene un id
-      if (dataSong.id && thisPlaylist.songs.some(song => song === dataSong.id)) {
-        const html = `
-          <li id="userSongPlaylist" class="userPlaylistItem" data-id="${dataSong.id}">
-            <div id="lft-sng-pst-itm">
-              <img src="assets/images/covers/${dataSong.cover}">
-              <div>
-                <span>${dataSong.name}</span>
-                <p class="gray">${dataSong.artist}</p>
-              </div>
-            </div>
-      
-            <div id="rght-sng-pst-itm">
-              <img src="${checkItem(dataSong.id)}" class="like-regular">
-              <div class="pst-duration ">
-                <p class="gray">${dataSong.duration}</p>
-                <img src="assets/images/xmark-solid-gray.svg" class="rm-sg-fpst">
-              </div>
-            </div>
-          </li>
-        `;
-
-        const tempDiv = document.createElement('div');
-        tempDiv.innerHTML = html;
-
-        fragment.appendChild(tempDiv.firstElementChild);
-      };
-    });
-    
-    document.getElementById('pst-song-list').appendChild(fragment);
-  });
-
+  // Load the leaked songs
+  await loadContent(songsInPlaylist, '#pst-song-list', playlistContentTemplate);
 };
 
 function loadInitialSongsArray() {
-  fetchSongs().then(songs => {
-    songs.forEach(song => songsToPlay.push(song.id));
-    loadMainStats();
-  });
+  globalDATA.forEach(song => songsToPlay.push(song.id));
+  loadMainStats();
   savedSongsToPlay = songsToPlay;
 };
 
 async function searchBarData(query) {
-  try {
-    const response = await fetch('../data/songs.json');
-    const data = await response.json();
-    
-    const filteredResults = data.filter(item =>
-        item.name.toLowerCase().includes(query.toLowerCase())
-    );
-    
-    showBarResults(filteredResults);
-  } catch (error) {
-      console.error('Error loading data:', error);
-  }
+  const filteredResults = globalDATA.filter(item =>
+      item.name.toLowerCase().includes(query.toLowerCase())
+  );
+  
+  showBarResults(filteredResults);
 };
 
 function showBarResults(filteredResults) {
@@ -482,6 +404,44 @@ export function loadMainStats() {
   document.querySelector('#stat-likes').innerHTML = getFavoritesSongs().length;
 }
 
+async function loadMainTopArtists() {
+  const count = getPlaysCount();
+  const container = document.querySelector('#tp-art-ctn');
+  
+  if (count.length > 1) {
+    let one,two,three,global = [];
+    count.sort((a, b) => b.plays - a.plays);  // ORDER BY
+    [one, two, three] = count;
+
+    globalDATA.forEach(song => {
+      switch (song.id) {
+        case one?.id:
+          ({ cover: one.cover, artist: one.artist } = song);
+          break;
+        
+        case two?.id:
+          ({ cover: two.cover, artist: two.artist } = song);
+          break;
+
+        case three?.id:
+          ({ cover: three.cover, artist: three.artist } = song);
+          break;
+
+        default:
+          break;
+      };
+    });
+    if (one) global.push(one);
+    if (two) global.push(two);
+    if (three) global.push(three);
+
+    container.innerHTML = '';
+    await loadContent(global, '#tp-art-ctn', mainTopArtistsTemplate);
+  } else {
+    container.innerHTML = 'Start listening to get your stats...'
+  };
+};
+
 
 // --- Event Listers Functions ---
 function setVolume(event) {
@@ -509,16 +469,14 @@ function handlePlayButton() {
     playBtn.src = pauseIcon; // Cambia a la imagen de pausa
     
     if (!currentAudio) {
-      fetchSongs().then(songs => {
-        let obj = songs[currentPosition];
-        currentAudio = new Audio(obj.path);
-        currentAudio.currentTime = currentTimeSong;
-        currentAudio.play();
-        // Inicia la actualización del progreso
-        setInterval(() => {
-          updateProgressBar();
-        }, 100); // Actualiza el progreso cada segundo
-      });
+      let obj = globalDATA[currentPosition];
+      currentAudio = new Audio(obj.path);
+      currentAudio.currentTime = currentTimeSong;
+      currentAudio.play();
+      // Inicia la actualización del progreso
+      setInterval(() => {
+        updateProgressBar();
+      }, 100); // Actualiza el progreso cada segundo
     } else {
       currentAudio.play();
       // Inicia la actualización del progreso
@@ -639,79 +597,55 @@ function shuffleArray(songsArr) {
   return songsArr;
 };
 
+
+
 async function loadArtistsContent() {
-  try {
-    const response = await fetch('../data/songs.json');
-    const data = await response.json();
-    const fragment = document.createDocumentFragment();
-
-    data.forEach(item => {
-      const html = `
-        <div id="itm-ats">
-          <img src="assets/images/covers/${item.cover}">
-          <p>${item.artist}</p>
-        </div>
-      `;
-  
-      const tempDiv = document.createElement('div');
-      tempDiv.innerHTML = html;
-  
-      fragment.appendChild(tempDiv.firstElementChild);
-    });
-
-    document.querySelector('#ats-ctn').appendChild(fragment);
-  } catch (error) {
-      console.error('Error loading content:', error);
-  }
+  await loadContent(globalDATA, '#ats-ctn', artistTemplate);
 };
 
+
+
 async function loadFavoriteSongs() {
-  try {
-    const response = await fetch('../data/songs.json');
-    const data = await response.json();
-    const OBJ = getFavoritesSongs();
-    const songsContainer = document.querySelector('#fv-songs-ctn');
+  const OBJ = getFavoritesSongs();
+  const songsContainer = document.querySelector('#fv-songs-ctn');
 
-    if (OBJ && data && OBJ.length > -1) {
-      songsToPlay = [];
-      songsContainer.innerHTML = '';
-      OBJ.forEach(song => songsToPlay.push(song));
-      savedSongsToPlay = songsToPlay;
-      const fragment = document.createDocumentFragment();
+  if (OBJ && OBJ.length > -1) {
+    songsToPlay = [];
+    songsContainer.innerHTML = '';
+    OBJ.forEach(song => songsToPlay.push(song));
+    savedSongsToPlay = songsToPlay;
+    const fragment = document.createDocumentFragment();
 
-      // Show by ID
-      data.forEach(song => {
-        if (OBJ.some(item => item === song.id)) {
-          const html = `
-            <li id="userSongFavorite" class="userFavoriteItem" data-id="${song.id}">
-              <div id="lft-sng-fv-itm">
-                <img src="assets/images/covers/${song.cover}">
-                <div>
-                  <span>${song.name}</span>
-                  <p class="gray">${song.artist}</p>
-                </div>
+    // Show by ID
+    globalDATA.forEach(song => {
+      if (OBJ.some(item => item === song.id)) {
+        const html = `
+          <li id="userSongFavorite" class="userFavoriteItem" data-id="${song.id}">
+            <div id="lft-sng-fv-itm">
+              <img src="assets/images/covers/${song.cover}">
+              <div>
+                <span>${song.name}</span>
+                <p class="gray">${song.artist}</p>
               </div>
-        
-              <div id="rght-sng-fv-itm">
-                <img src="assets/images/heart-solid-liked.svg">
-                <div class="fv-duration">
-                  <p class="gray">${song.duration}</p>
-                </div>
+            </div>
+      
+            <div id="rght-sng-fv-itm">
+              <img src="assets/images/heart-solid-liked.svg">
+              <div class="fv-duration">
+                <p class="gray">${song.duration}</p>
               </div>
-            </li>
-          `;
+            </div>
+          </li>
+        `;
 
-          const tempDiv = document.createElement('div');
-          tempDiv.innerHTML = html;
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = html;
 
-          fragment.appendChild(tempDiv.firstElementChild);
-        };
-      });  
-      songsContainer.appendChild(fragment);
-    }
-  } catch(error) {
-    console.error('Error loading content:', error);
-  };
+        fragment.appendChild(tempDiv.firstElementChild);
+      };
+    });  
+    songsContainer.appendChild(fragment);
+  }
 };
 
 // ----- | Event Listeners | ------
@@ -866,6 +800,10 @@ favoritesNavegation.addEventListener('click', () => {
   handleNavegationPaint('none', 'none', 'none', 'none', 'block', 'Favorites');
   document.querySelector('#fv-sgs-count').innerHTML = `${getFavoritesSongs().length} Songs`;
   loadFavoriteSongs();
+});
+
+document.querySelector('#se-all-arts').addEventListener('click', () => {
+  artistsNavegation.click();
 });
 
 

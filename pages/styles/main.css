@@ -462,9 +462,11 @@
       font-weight: 400;
     }
     p {font-size: 14px;}
+    /*
     &.active, &:hover {
       background-color: var(--main-color);
     }
+    */
   }
 }
 
@@ -672,7 +674,7 @@
 
 .non-view, #tp-art-home div span, #stats-itms li, #favorite-text p, #songs-control-home span, #right-song-item div p, #favorite-text div {cursor: default;}
 
-#tp-art-home div p, #tp-art-home li, #songs-control-home div, #right-song-item img, #left-song-item {cursor: pointer;}
+#tp-art-home > div > p, #songs-control-home div, #right-song-item img, #left-song-item {cursor: pointer;}
 
 /* --- Window create playlist --- */
 #playlist-dialog {
