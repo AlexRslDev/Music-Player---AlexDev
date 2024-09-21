@@ -28,7 +28,7 @@ html {
 body {
   width: 100dvw;
   height: 100dvh;
-  overflow: auto;
+  overflow: hidden;
 }
 
 ul {
