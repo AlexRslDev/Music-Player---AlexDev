@@ -54,6 +54,7 @@ let currentAudio,
   currentPlaylist,
   songsToPlay = [],
   savedSongsToPlay = [],
+  beforeRandom = [],
   originalVolume = 1,
   isRepeating;
 
@@ -874,9 +875,10 @@ document.querySelector('#shuffle').addEventListener('click', (event)=> {
   const parent = event.target.parentElement;
   if (parent.classList.contains('active')) {
     parent.classList.remove('active');
-    songsToPlay = savedSongsToPlay;
+    songsToPlay = beforeRandom;
   } else {
     parent.classList.add('active');
+    beforeRandom = songsToPlay;
     const neww = shuffleArray(songsToPlay.slice()); // don't change the original Array.
     songsToPlay = neww;
   };
