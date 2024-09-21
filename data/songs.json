@@ -3,7 +3,7 @@
         "id": "1",
         "name": "Mardy Bum",
         "artist": "Arctic Monkeys",
-        "path": "../assets/songs/Mardy Bum.mp3",
+        "path": "./assets/songs/Mardy Bum.mp3",
         "duration": "2:55",
         "cover": "arctic monkeys.webp"
     },
@@ -11,7 +11,7 @@
         "id": "2",
         "name": "Tu me encantas",
         "artist": "3AM",
-        "path": "../assets/songs/Tu me encantas.mp3",
+        "path": "./assets/songs/Tu me encantas.mp3",
         "duration": "2:42",
         "cover": "3AM.webp"
     },
@@ -19,7 +19,7 @@
         "id": "3",
         "name": "[FREE] Horror Type Beat -_'_'Pentacle_'_' _ Dark Horror Trap Beat Instrumental",
         "artist": "Frankie Vibes",
-        "path": "../assets/songs/[FREE] Horror Type Beat -_'_'Pentacle_'_' _ Dark Horror Trap Beat Instrumental (prod. Frankie Vibes).mp3",
+        "path": "./assets/songs/[FREE] Horror Type Beat -_'_'Pentacle_'_' _ Dark Horror Trap Beat Instrumental (prod. Frankie Vibes).mp3",
         "duration": "2:47",
         "cover": "Frankie Vibes.webp"
     },
@@ -27,7 +27,7 @@
         "id": "4",
         "name": "Dancin",
         "artist": "Aaron Smith (KRONO Remix)",
-        "path": "../assets/songs/Aaron Smith - Dancin (KRONO Remix).mp3",
+        "path": "./assets/songs/Aaron Smith - Dancin (KRONO Remix).mp3",
         "duration": "3:14",
         "cover": "Aaron Smith (KRONO Remix).webp"
     },
@@ -35,7 +35,7 @@
         "id": "5",
         "name": "After the Tone",
         "artist": "O.D.D",
-        "path": "../assets/songs/After the Tone - O.D.D.mp3",
+        "path": "./assets/songs/After the Tone - O.D.D.mp3",
         "duration": "3:01",
         "cover": "O.D.D.webp"
     },
@@ -43,7 +43,7 @@
         "id": "6",
         "name": "Idfc",
         "artist": "Blackbear",
-        "path": "../assets/songs/Blackbear - Idfc.mp3",
+        "path": "./assets/songs/Blackbear - Idfc.mp3",
         "duration": "4:06",
         "cover": "Blackbear.webp"
     },
@@ -51,7 +51,7 @@
         "id": "7",
         "name": "CUTE DEPRESSED",
         "artist": "INABAKUMORI",
-        "path": "../assets/songs/CUTE DEPRESSED - INABAKUMORI.mp3",
+        "path": "./assets/songs/CUTE DEPRESSED - INABAKUMORI.mp3",
         "duration": "1:36",
         "cover": "INABAKUMORI.webp"
     },
@@ -59,7 +59,7 @@
         "id": "8",
         "name": "Poetic Vulgarity",
         "artist": "d4vd",
-        "path": "../assets/songs/d4vd - Poetic Vulgarity.mp3",
+        "path": "./assets/songs/d4vd - Poetic Vulgarity.mp3",
         "duration": "3:56",
         "cover": "d4vd.webp"
     },
@@ -67,7 +67,7 @@
         "id": "9",
         "name": "F. Chopin _ Nocturne in c sharp minor for violin and piano",
         "artist": "YuEun Kim",
-        "path": "../assets/songs/F. Chopin _ Nocturne in c sharp minor for violin and piano_ YuEun Kim.mp3",
+        "path": "./assets/songs/F. Chopin _ Nocturne in c sharp minor for violin and piano_ YuEun Kim.mp3",
         "duration": "4:36",
         "cover": "YuEun Kim.webp"
     },
@@ -75,7 +75,7 @@
         "id": "10",
         "name": "Low",
         "artist": "Flo Rida",
-        "path": "../assets/songs/Flo Rida - Low (feat. T-Pain).mp3",
+        "path": "./assets/songs/Flo Rida - Low (feat. T-Pain).mp3",
         "duration": "3:50",
         "cover": "Flo Rida.webp"
     },
@@ -83,7 +83,7 @@
         "id": "11",
         "name": "Five Minutes More",
         "artist": "Frank Sinatra",
-        "path": "../assets/songs/Frank Sinatra  - Five Minutes More.mp3",
+        "path": "./assets/songs/Frank Sinatra  - Five Minutes More.mp3",
         "duration": "2:36",
         "cover": "frank sinatra.webp"
     },
@@ -91,7 +91,7 @@
         "id": "12",
         "name": "Dance Class",
         "artist": "Good Kid",
-        "path": "../assets/songs/Good Kid - Dance Class.mp3",
+        "path": "./assets/songs/Good Kid - Dance Class.mp3",
         "duration": "2:57",
         "cover": "good kid.webp"
     },
@@ -99,7 +99,7 @@
         "id": "13",
         "name": "From The Start",
         "artist": "Good Kid",
-        "path": "../assets/songs/Good Kid - From The Start.mp3",
+        "path": "./assets/songs/Good Kid - From The Start.mp3",
         "duration": "2:30",
         "cover": "good kid.webp"
     },
@@ -107,7 +107,7 @@
         "id": "14",
         "name": "Osmosis",
         "artist": "Good Kid",
-        "path": "../assets/songs/Good Kid - Osmosis.mp3",
+        "path": "./assets/songs/Good Kid - Osmosis.mp3",
         "duration": "2:53",
         "cover": "good kid.webp"
     },
@@ -115,7 +115,7 @@
         "id": "15",
         "name": "Premier Inn",
         "artist": "Good Kid",
-        "path": "../assets/songs/Good Kid - Premier Inn.mp3",
+        "path": "./assets/songs/Good Kid - Premier Inn.mp3",
         "duration": "3:34",
         "cover": "good kid.webp"
     },
@@ -123,7 +123,7 @@
         "id": "16",
         "name": "Plastic Beach",
         "artist": "Gorillaz",
-        "path": "../assets/songs/Gorillaz - Plastic Beach.mp3",
+        "path": "./assets/songs/Gorillaz - Plastic Beach.mp3",
         "duration": "3:47",
         "cover": "gorillaz.webp"
     },
@@ -131,7 +131,7 @@
         "id": "17",
         "name": "Senorita",
         "artist": "Justin Timberlake",
-        "path": "../assets/songs/Justin Timberlake - Senorita.mp3",
+        "path": "./assets/songs/Justin Timberlake - Senorita.mp3",
         "duration": "4:36",
         "cover": "justin timberlake.webp"
     },
@@ -139,7 +139,7 @@
         "id": "18",
         "name": "PARADIGMA",
         "artist": "feat.GHO6TBXSTA",
-        "path": "../assets/songs/PARADIGMA (feat.GHO6TBXSTA).mp3",
+        "path": "./assets/songs/PARADIGMA (feat.GHO6TBXSTA).mp3",
         "duration": "2:18",
         "cover": "feat.GHO6TBXSTA.webp"
     },
@@ -147,7 +147,7 @@
         "id": "19",
         "name": "Pretty Girls",
         "artist": "Bluebonnets",
-        "path": "../assets/songs/Pretty Girls (Bluebonnets).mp3",
+        "path": "./assets/songs/Pretty Girls (Bluebonnets).mp3",
         "duration": "3:15",
         "cover": "Bluebonnets.webp"
     },
@@ -155,7 +155,7 @@
         "id": "20",
         "name": "Bring Us Down",
         "artist": "The Luka State",
-        "path": "../assets/songs/The Luka State - Bring Us Down.mp3",
+        "path": "./assets/songs/The Luka State - Bring Us Down.mp3",
         "duration": "3:24",
         "cover": "the luka state.webp"
     },
@@ -163,7 +163,7 @@
         "id": "21",
         "name": "ANDROMEDA",
         "artist": "WOS",
-        "path": "../assets/songs/WOS - ANDROMEDA.mp3",
+        "path": "./assets/songs/WOS - ANDROMEDA.mp3",
         "duration": "2:52",
         "cover": "wos.webp"
     }
