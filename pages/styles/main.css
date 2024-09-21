@@ -561,6 +561,7 @@
 
 #song-playing {
   width: 14rem;
+  height: auto;
   gap: .6rem;
   border-radius: 8px;
   transition: all .2s ease;
@@ -573,7 +574,7 @@
     border-radius: 8px;
   }
 
-  div {
+  > div {
     overflow: hidden;
     white-space: nowrap; /* Evita que el texto se divida en varias líneas */
     text-overflow: ellipsis; /* Aplica los puntos suspensivos */
