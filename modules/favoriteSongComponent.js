@@ -40,6 +40,6 @@ export async function getFavoriteSong() {
     favoriteName.innerHTML = name;
     favoriteArtist.innerHTML = artist;
     favoritePlays.innerHTML = plays + ' Plays';
-    favoriteImg.src = `assets/images/covers/${artist}.webp`;
+    favoriteImg.src = `./assets/images/covers/${artist}.webp`;
   };
 };
