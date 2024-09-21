@@ -208,8 +208,7 @@
 
   #srch-rstls {
     background-color: var(--main-color);
-    width: 390px;
-    max-height: 300px;
+    width: 100%;
     position: absolute;
     top: 32px;
     z-index: 999;
