@@ -864,7 +864,7 @@
 
 @media screen and (max-width: 630px) {
   #right-song-item {gap: 8px;}
-  #place-app span {display: none;}
+  #window-pos {display: none;}
 }
 
 @media screen and (max-width: 654px) {.image-component img {display: none;}}
