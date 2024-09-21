@@ -82,6 +82,7 @@ function loader() {
 
 // Include HTML user's songs on the container
 async function loadUserSongsHTML() {
+  userSongs.innerHTML = '';
   await loadContent(globalDATA, '.userSongs', userSongsTemplate);
 };
 
