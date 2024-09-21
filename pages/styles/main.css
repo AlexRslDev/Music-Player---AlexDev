@@ -329,8 +329,8 @@
       text-overflow: ellipsis;
     }
 
-    div {
-      div {
+    > div {
+      > div {
         display: flex;
         align-items: baseline;
         gap: 8px;
@@ -837,6 +837,11 @@
 @media screen and (max-width: 1440px) {#home-window {gap: 2rem;}}
 
 @media screen and (max-width: 1320px) {
+  #app-container {
+    grid-template-rows: 0.10fr 1fr 80px;
+  }
+}
+@media screen and (max-width: 1300px) {
   #right-home {display: none;}
   #left-home {width: 100%;}
 }
