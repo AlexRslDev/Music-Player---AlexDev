@@ -1,7 +1,7 @@
 import { globalDATA } from '../modules/globalData.js';
 import { loadContent } from '../modules/loadContent.js';
 import { getPlaysCount, updatePlayCount } from '../modules/playsCounter.js';
-import { userSongsTemplate, artistTemplate, playlistContentTemplate, mainTopArtistsTemplate } from '../modules/templates.js';
+import { userSongsTemplate, artistTemplate, playlistContentTemplate, mainTopArtistsTemplate, favoriteSongTemplate } from '../modules/templates.js';
 import { checkItem } from '../modules/favoriteSongs.js';
 import { getFavoriteSong } from '../modules/favoriteSongComponent.js';
 import { removeActive, includeActive } from '../utils/removeActive.js';
@@ -31,7 +31,8 @@ const userSongs = document.querySelector('.userSongs'),
   favoritesNavegation = document.querySelector('.favorites-nav'),
   searchBar = document.getElementById('srch-bar'),
   searchResults = document.getElementById('srch-rstls'),
-  volumeIcon = document.querySelector('#vol-icon');
+  volumeIcon = document.querySelector('#vol-icon'),
+  favoriteSongsContainer = document.querySelector('#fv-songs-ctn');
 
 // Player icon path
 const playIcon = 'assets/images/play-solid.svg',
@@ -69,6 +70,7 @@ loadPlaylists();
 loadInitialSongsArray();
 loadUserSongsHTML();
 loadMainTopArtists();
+
 
 function loader() {
   setTimeout(() => {
@@ -109,13 +111,7 @@ function playSongById(id) {
     currentAudio.play()
       .then(() => {
         currentAudio.volume = originalVolume;
-        if (currentInterface === 'main') {
-          removeActive('userSongItem');
-          includeActive('userSongItem', id);
-        } else {
-          removeActive('userPlaylistItem');
-          includeActive('userPlaylistItem', id);
-        };
+        controlActivesInterfaces(id);
         
         // guardar los datos de la cancion actual para el localStorage
         currentImg = `assets/images/covers/${song.cover}`;
@@ -127,7 +123,7 @@ function playSongById(id) {
         playerTitle.innerHTML = currentName;
         playerArtist.innerHTML = currentArtist;
 
-        loadMainTopArtists();
+        loadMainTopArtists(currentInterface, id);
 
         // Actualizarla barra del player
         currentAudio.addEventListener('timeupdate', updateProgressBar);
@@ -160,6 +156,25 @@ function playSongById(id) {
       });
   } else {
     console.error('Canción no encontrada:', id);
+  };
+};
+
+function controlActivesInterfaces(id) {
+  switch (currentInterface) {
+    case 'main':
+      removeActive('userSongItem');
+      includeActive('userSongItem', id);
+      break;
+    case 'playlist':
+      removeActive('userPlaylistItem');
+      includeActive('userPlaylistItem', id);
+      break;
+    case 'favorites':
+      removeActive('userFavoriteItem');
+      includeActive('userFavoriteItem', id);
+      break;
+    default:
+      break;
   };
 };
 
@@ -346,7 +361,7 @@ async function loadPlaylistContent(position) {
   // Load the ArrayIndex variable with the id's of playlist songs
   songsToPlay = [];
   thisPlaylist.songs.forEach(song => songsToPlay.push(song));
-  savedSongsToPlay = songsToPlay;
+  //savedSongsToPlay = songsToPlay;
 
   // Filter the songs that are in the playlist
   const songsInPlaylist = globalDATA.filter(dataSong =>
@@ -493,12 +508,11 @@ function handlePlayButton() {
 
 function handleSongClick(event) {
   const liElement = event.target.closest('li');
-  liElement.classList.add('active');
-  
-  if (liElement && liElement.id === 'userSong' || liElement.id === 'userSongPlaylist') {
-    const id = liElement.getAttribute('data-id'); // Obtener el ID desde el data-attribute
-    playSongById(id);
+  const id = liElement.getAttribute('data-id');
+  if (!liElement.classList.contains('active')) {
+    liElement.classList.add('active');
   };
+  playSongById(id);
 };
 
 function convertPlaylistImage() {
@@ -597,55 +611,27 @@ function shuffleArray(songsArr) {
   return songsArr;
 };
 
-
-
 async function loadArtistsContent() {
   await loadContent(globalDATA, '#ats-ctn', artistTemplate);
 };
 
-
-
 async function loadFavoriteSongs() {
   const OBJ = getFavoritesSongs();
-  const songsContainer = document.querySelector('#fv-songs-ctn');
 
   if (OBJ && OBJ.length > -1) {
-    songsToPlay = [];
+    const songsContainer = document.querySelector('#fv-songs-ctn');
     songsContainer.innerHTML = '';
-    OBJ.forEach(song => songsToPlay.push(song));
-    savedSongsToPlay = songsToPlay;
-    const fragment = document.createDocumentFragment();
+    let songsInPlaylist = [];
+    songsToPlay = [];
 
-    // Show by ID
-    globalDATA.forEach(song => {
-      if (OBJ.some(item => item === song.id)) {
-        const html = `
-          <li id="userSongFavorite" class="userFavoriteItem" data-id="${song.id}">
-            <div id="lft-sng-fv-itm">
-              <img src="assets/images/covers/${song.cover}">
-              <div>
-                <span>${song.name}</span>
-                <p class="gray">${song.artist}</p>
-              </div>
-            </div>
-      
-            <div id="rght-sng-fv-itm">
-              <img src="assets/images/heart-solid-liked.svg">
-              <div class="fv-duration">
-                <p class="gray">${song.duration}</p>
-              </div>
-            </div>
-          </li>
-        `;
+    OBJ.forEach(song => {
+      songsToPlay.push(song)
+      songsInPlaylist = [...songsInPlaylist, ...globalDATA.filter(dataSong => dataSong.id === song)];
+    });
 
-        const tempDiv = document.createElement('div');
-        tempDiv.innerHTML = html;
-
-        fragment.appendChild(tempDiv.firstElementChild);
-      };
-    });  
-    songsContainer.appendChild(fragment);
-  }
+    // Load the leaked songs
+    await loadContent(songsInPlaylist, '#fv-songs-ctn', favoriteSongTemplate);
+  };
 };
 
 // ----- | Event Listeners | ------
@@ -672,8 +658,8 @@ document.querySelector('#vol-icon').addEventListener('click', () => {
 
 // Play a User's Song
 userSongs.addEventListener('dblclick', (event) => {
-  handleSongClick(event);
   removeActive('userSongItem');
+  handleSongClick(event);
 });
 // Play a Playlist Song
 document.getElementById('pst-song-list').addEventListener('dblclick', (event) => {
@@ -687,6 +673,14 @@ favoriteSongBtn.addEventListener('click', (event) => {
   const id = btn.getAttribute('data-id'); // Obtener el ID desde el data-attribute
   playSongById(id);
 });
+document.querySelector('#str-lkd-pst').addEventListener('click', () => {
+  playSongById(songsToPlay[0]);
+});
+favoriteSongsContainer.addEventListener('dblclick', (event) => {
+  removeActive('userFavoriteItem');
+  handleSongClick(event);
+});
+
 
 // Playlist Creation
 createPlaylistBtn.addEventListener('click', () => {
@@ -743,6 +737,7 @@ playlistContainer.addEventListener('click', (event) => {
   
   if (liElement && !liElement.classList.contains('remove')) {
     isInPlaylist = true;
+    currentInterface = 'playlist';
     removeActive('pst-item-side');
     document.querySelector('#song-playing').classList.remove('active');
     artistsNavegation.classList.remove('active');
@@ -789,6 +784,9 @@ artistsNavegation.addEventListener('click', () => {
   handleNavegationPaint('none', 'none', 'none', 'block', 'none', 'Artists');
   loadArtistsContent();
 });
+document.querySelector('#se-all-arts').addEventListener('click', () => {
+  artistsNavegation.click();
+});
 favoritesNavegation.addEventListener('click', () => {
   currentInterface = 'favorites';
   removeActive('pst-item-side');
@@ -802,9 +800,6 @@ favoritesNavegation.addEventListener('click', () => {
   loadFavoriteSongs();
 });
 
-document.querySelector('#se-all-arts').addEventListener('click', () => {
-  artistsNavegation.click();
-});
 
 
 // Search bar
@@ -872,7 +867,6 @@ document.getElementById('pst-song-list').addEventListener('click', (event) => {
 // Play playlist button
 document.querySelector('#play-pst').addEventListener('click', () => {
   playSongById(songsToPlay[0]);
-  currentInterface = 'playlist';
 });
 
 // Random Button

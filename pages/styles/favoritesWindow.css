@@ -19,6 +19,9 @@
       img {
         width: 40px;
         height: 40px;
+        transition: all .2s ease;
+        cursor: pointer;
+        &:hover {scale: 1.1;}
       }
       span {font-size: 18px;}
     }
@@ -85,3 +88,5 @@
     #rght-sng-fv-itm img {opacity: 1;}
   }
 }
+
+.userFavoriteItem.active {background-color: var(--main-color);}

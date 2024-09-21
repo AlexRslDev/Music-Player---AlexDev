@@ -64,3 +64,22 @@ export const mainTopArtistsTemplate =  (item) => `
     </div>
   </li>
 `;
+
+export const favoriteSongTemplate = (song) => `
+  <li id="userSongFavorite" class="userFavoriteItem" data-id="${song.id}">
+    <div id="lft-sng-fv-itm">
+      <img src="assets/images/covers/${song.cover}">
+      <div>
+        <span>${song.name}</span>
+        <p class="gray">${song.artist}</p>
+      </div>
+    </div>
+
+    <div id="rght-sng-fv-itm">
+      <img src="assets/images/heart-solid-liked.svg">
+      <div class="fv-duration">
+        <p class="gray">${song.duration}</p>
+      </div>
+    </div>
+  </li>
+`;
