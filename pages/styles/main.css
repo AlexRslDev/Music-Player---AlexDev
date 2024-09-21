@@ -5,8 +5,8 @@
   background-color: var(--main-color);
   display: none;
   position: relative;
-  height: 100vh;
-  width: 100vw;
+  height: 100dvh;
+  width: 100dvw;
   grid-template-columns: 0.25fr 1fr;
   grid-template-rows: 0.10fr 1fr 0.14fr;
   grid-template-areas:
