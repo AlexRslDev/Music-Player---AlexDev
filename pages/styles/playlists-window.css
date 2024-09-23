@@ -1,56 +1,49 @@
 #top-pst-wd {
   display: flex;
   position: relative;
-
-  #info-content-pst {
-    position: absolute;
-    left: calc(150px + 16px);
-    bottom: 0;
-
-    #play-pst {
-      cursor: pointer;
-    }
-  }
-
-  img {
-    width: 150px;
-    height: 150px;
-    border-radius: 8px;
-  }
-
-  #tp-txt-pst {
-    margin-bottom: 10px;
-    p:first-of-type {
-      font-size: 14px;
-      color: var(--spanish-gray);
-    }
-    span {
-      font-size: 24px;
-      font-weight: 600;
-    }
-    p:nth-of-type(2) {
-      font-size: 12px;
-      font-family: var(--poppins);
-    }
-  }
-
-  button {
-    width: 144px;
-    height: 51px;
-    border: none;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    background-color: var(--main-color);
-
-    img {
-      width: 30px;
-      height: 30px;
-    }
-  }
-
+}
+#top-pst-wd #info-content-pst {
+  position: absolute;
+  left: 166px;
+  bottom: 0;
+}
+#top-pst-wd #info-content-pst #play-pst {
+  cursor: pointer;
+}
+#top-pst-wd img {
+  width: 150px;
+  height: 150px;
+  border-radius: 8px;
+}
+#top-pst-wd #tp-txt-pst {
+  margin-bottom: 10px;
+}
+#top-pst-wd #tp-txt-pst p:first-of-type {
+  font-size: 14px;
+  color: var(--spanish-gray);
+}
+#top-pst-wd #tp-txt-pst span {
+  font-size: 24px;
+  font-weight: 600;
+}
+#top-pst-wd #tp-txt-pst p:nth-of-type(2) {
+  font-size: 12px;
+  font-family: var(--poppins);
+}
+#top-pst-wd button {
+  width: 144px;
+  height: 51px;
+  border: none;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background-color: var(--main-color);
+}
+#top-pst-wd button img {
+  width: 30px;
+  height: 30px;
 }
 
 #oder-by-pst {
@@ -64,60 +57,58 @@
 
 #pst-song-list {
   margin-top: 30px;
-
-  li {
-    width: 100%;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 14px;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all .2s ease-in-out;
-
-    &, #lft-sng-pst-itm, #rght-sng-pst-itm {
-      display: flex;
-    }
-    &:hover {
-      background-color: var(--main-color);
-      #rght-sng-pst-itm img {opacity: 100;}
-    }
-    &.active {
-      background-color: var(--main-color);
-      #rght-sng-pst-itm img {opacity: 100;}
-    }
-
-    #lft-sng-pst-itm {
-      align-items: center;
-      gap: 12px;
-      img {
-        width: 40px;
-        height: 40px;
-        border-radius: 8px;
-      }
-
-      div {
-        p {
-          font-size: 14px;
-          font-family: var(--poppins);
-        }
-      }
-    }
-
-    #rght-sng-pst-itm {
-      align-items: center;
-      margin-right: 30px;
-      gap: 33px;
-
-      &, div {display: flex;}
-      img {
-        opacity: 0;
-        width: 20px;
-        height: 20px;
-        transition: all .2s ease;
-      }
-      div {
-        gap: 11px;
-      }
-    }
-  }
 }
+#pst-song-list li {
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+#pst-song-list li, #pst-song-list li #lft-sng-pst-itm, #pst-song-list li #rght-sng-pst-itm {
+  display: flex;
+}
+#pst-song-list li:hover {
+  background-color: var(--main-color);
+}
+#pst-song-list li:hover #rght-sng-pst-itm img {
+  opacity: 100;
+}
+#pst-song-list li.active {
+  background-color: var(--main-color);
+}
+#pst-song-list li.active #rght-sng-pst-itm img {
+  opacity: 100;
+}
+#pst-song-list li #lft-sng-pst-itm {
+  align-items: center;
+  gap: 12px;
+}
+#pst-song-list li #lft-sng-pst-itm img {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+}
+#pst-song-list li #lft-sng-pst-itm div p {
+  font-size: 14px;
+  font-family: var(--poppins);
+}
+#pst-song-list li #rght-sng-pst-itm {
+  align-items: center;
+  margin-right: 30px;
+  gap: 33px;
+}
+#pst-song-list li #rght-sng-pst-itm, #pst-song-list li #rght-sng-pst-itm div {
+  display: flex;
+}
+#pst-song-list li #rght-sng-pst-itm img {
+  opacity: 0;
+  width: 20px;
+  height: 20px;
+  transition: all 0.2s ease;
+}
+#pst-song-list li #rght-sng-pst-itm div {
+  gap: 11px;
+}/*# sourceMappingURL=playlists-window.css.map */
